@@ -1,0 +1,44 @@
+; This is the Calva evaluation results output window.
+; TIPS: The keyboard shortcut `ctrl+alt+c o` shows and focuses this window
+;   when connected to a REPL session.
+; Please see https://calva.io/output/ for more info.
+; Happy coding! ♥️
+
+; Jacking in...
+; Starting Jack-in Terminal: lein update-in :dependencies conj '[nrepl,"0.8.3"]' -- update-in :dependencies conj '[cider/piggieback,"0.5.2"]' -- update-in :plugins conj '[cider/cider-nrepl,"0.25.10"]' -- update-in '[:repl-options,:nrepl-middleware]' conj '["cider.nrepl/cider-middleware"]' -- update-in '[:repl-options,:nrepl-middleware]' conj '["cider.piggieback/wrap-cljs-repl"]' -- repl :headless
+; Hooking up nREPL sessions...
+; Connected session: clj
+; TIPS: 
+;   - You can edit the contents here. Use it as a REPL if you like.
+;   - `alt+enter` evaluates the current top level form.
+;   - `ctrl+enter` evaluates the current form.
+;   - `alt+up` and `alt+down` traverse up and down the REPL command history
+;      when the cursor is after the last contents at the prompt
+;   - Clojure lines in stack traces are peekable and clickable.
+clj꞉user꞉> 
+; Creating cljs repl session...
+; Connecting cljs repl: Leiningen + ClojureScript built-in for node...
+;   The Calva Connection Log might have more connection progress information.
+; Connected session: cljs
+; TIPS: You can choose which REPL to use (clj or cljs):
+;    *Calva: Toggle REPL connection*
+;    (There is a button in the status bar for this)
+; Jack-in done.
+cljs꞉cljs.user꞉> 
+true
+cljs꞉buddylistcljs.core꞉> 
+#'buddylistcljs.core/http
+
+cljs꞉buddylistcljs.core꞉> 
+#object[ClientRequest [object Object]]
+cljs꞉buddylistcljs.core꞉> 
+; Error: socket hang up
+;     at connResetException (internal/errors.js:559:14)
+    at Socket.socketOnEnd (_http_client.js:433:23)
+    at Socket.emit (events.js:208:15)
+    at Socket.EventEmitter.emit (domain.js:499:23)
+    at endReadableNT (_stream_readable.js:1168:12)
+    at processTicksAndRejections (internal/process/task_queues.js:77:11)
+cljs꞉buddylistcljs.core꞉> 
+; (node:8938) [DEP0097] DeprecationWarning: Using a domain property in MakeCallback is deprecated. Use the async_context variant of MakeCallback or the AsyncResource class instead.
+cljs꞉buddylistcljs.core꞉> 

@@ -1,0 +1,8 @@
+[0mCompiling "app/dev/js/front.js" from ["src_front" "src_front_profile/buddylistcljs_front/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front.js" in 2.454 seconds.[0m
+notifying browser that file changed:  app/dev/js/front.js
+notifying browser that file changed:  app/dev/js/out_front/goog/deps.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front/core.js
+[0mCompiling "app/dev/js/front.js" from ["src_front" "src_front_profile/buddylistcljs_front/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front.js" in 0.572 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front/core.js
