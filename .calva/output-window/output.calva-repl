@@ -5,7 +5,7 @@
 ; Happy coding! ♥️
 
 ; Jacking in...
-; Starting Jack-in Terminal: lein update-in :dependencies conj '[nrepl,"0.8.3"]' -- update-in :dependencies conj '[cider/piggieback,"0.5.2"]' -- update-in :plugins conj '[cider/cider-nrepl,"0.25.10"]' -- update-in '[:repl-options,:nrepl-middleware]' conj '["cider.nrepl/cider-middleware"]' -- update-in '[:repl-options,:nrepl-middleware]' conj '["cider.piggieback/wrap-cljs-repl"]' -- repl :headless
+; Starting Jack-in Terminal: lein update-in :dependencies conj '[nrepl,"0.8.3"]' -- update-in :dependencies conj '[cider/piggieback,"0.5.2"]' -- update-in :plugins conj '[cider/cider-nrepl,"0.25.11"]' -- update-in '[:repl-options,:nrepl-middleware]' conj '["cider.nrepl/cider-middleware"]' -- update-in '[:repl-options,:nrepl-middleware]' conj '["cider.piggieback/wrap-cljs-repl"]' -- repl :headless
 ; Hooking up nREPL sessions...
 ; Connected session: clj
 ; TIPS: 
@@ -26,19 +26,29 @@ clj꞉user꞉> 
 ; Jack-in done.
 cljs꞉cljs.user꞉> 
 true
-cljs꞉buddylistcljs.core꞉> 
-#'buddylistcljs.core/http
+cljs꞉buddylistcljs.user꞉> 
+#'buddylistcljs.user/none-nil
 
+cljs꞉buddylistcljs.user꞉> 
+#'buddylistcljs.user/axios
+
+cljs꞉buddylistcljs.user꞉> 
+#'buddylistcljs.user/sign-up
+
+cljs꞉buddylistcljs.user꞉> 
+nil
+cljs꞉buddylistcljs.user꞉> 
+#object[Promise [object Promise]]
+cljs꞉buddylistcljs.user꞉> 
+#'buddylistcljs.core/sign-up
+
+; WARNING: Use of undeclared Var buddylistcljs.core/none-nil at line 2 <cljs repl>
+; WARNING: Use of undeclared Var buddylistcljs.core/axios at line 5 <cljs repl>
 cljs꞉buddylistcljs.core꞉> 
-#object[ClientRequest [object Object]]
-cljs꞉buddylistcljs.core꞉> 
-; Error: socket hang up
-;     at connResetException (internal/errors.js:559:14)
-    at Socket.socketOnEnd (_http_client.js:433:23)
-    at Socket.emit (events.js:208:15)
-    at Socket.EventEmitter.emit (domain.js:499:23)
-    at endReadableNT (_stream_readable.js:1168:12)
-    at processTicksAndRejections (internal/process/task_queues.js:77:11)
-cljs꞉buddylistcljs.core꞉> 
-; (node:8938) [DEP0097] DeprecationWarning: Using a domain property in MakeCallback is deprecated. Use the async_context variant of MakeCallback or the AsyncResource class instead.
-cljs꞉buddylistcljs.core꞉> 
+nil
+cljs꞉buddylistcljs.user꞉> 
+#'buddylistcljs-front.core/init!
+
+; WARNING: Use of undeclared Var buddylistcljs-front.core/mount-root at line 2 <cljs repl>
+cljs꞉buddylistcljs-front.core꞉> 
+; nREPL Connection was closed

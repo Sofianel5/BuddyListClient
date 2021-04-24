@@ -11,6 +11,8 @@
     "license": "MIT",
     "repository": "YOUR_OWN_REPOSITORY",
     "dependencies": {
-        "coffeescript": "^2.5.1"
+        "axios": "^0.21.1",
+        "coffeescript": "^2.5.1",
+        "node-localstorage": "^2.1.6"
     }
 }

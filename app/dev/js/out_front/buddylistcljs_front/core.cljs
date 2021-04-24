@@ -5,7 +5,11 @@
 
 (defn root-component []
   [:h1 (:message @state)
-   [:p "with figwheel! +++"]])
+   [:p "Log in"]
+   [:form {:on-submit #(println %)}
+    [:input {:id "username" :type "text"}]
+    [:input {:id "password" :type "password"}]
+    [:input {:type "submit"}]]])
 
 (defn mount-root [setting]
   (reagent/render [root-component]

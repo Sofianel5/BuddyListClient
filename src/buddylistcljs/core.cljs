@@ -1,38 +1,24 @@
 (ns buddylistcljs.core
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [cljs.nodejs :as nodejs]
+            [buddylistcljs.user :as user]
             [cljs.core.async :refer [<!]]))
 
 (def path (nodejs/require "path"))
-
-(def http (nodejs/require "http"))
-
-(.request http {:host "50.16.117.236" :port "8000" :path "/login" :method "POST"} #(println (.-body %)))
 
 (def Electron (nodejs/require "electron"))
 
 (def BrowserWindow (.-BrowserWindow Electron))
 
+(def ipc-main (.-ipcMain Electron))
+
 (def crash-reporter (.-crashReporter Electron))
 
 (def Os (nodejs/require "os"))
 
-(def *win* (atom nil))
+(def *win* (atom {}))
 
 (def app (.-app Electron))
-
-(defn login-user [username password]
-  (GET "http://50.16.117.236:8000/login" {:username username :password password}))
-
-(login-user "sofiane" "password")
-
-(defn signup-user [username password phone]
-  (go (let [params {:username username :password password :phone phone}
-            response (<! (http/post "http://50.16.117.236:8000/signup"
-                                    {:json-params params}))]
-        (prn (:status response))
-        (prn (map :login (:body response))))))
-(signup-user "user1000" "password" "1234567890")
 
 (defn -main []
   (.start crash-reporter (clj->js {:companyName "BuddyList"
@@ -45,19 +31,37 @@
   ;; window all closed listener
   (.on app "window-all-closed"
        (fn [] (if (not= (.-platform nodejs/process) "darwin")
+                ; Stop doing this in future
                 (.quit app))))
+  
+  (.on ipc-main "login"
+       (fn [event arg]
+         (println event)
+         (println arg)))
 
   ;; ready listener
   (.on app "ready"
        (fn []
-         (reset! *win* (BrowserWindow. (clj->js {:width 800 :height 600})))
-
+         (swap! *win* assoc :loading (BrowserWindow. (clj->js {:width 800 :height 600})))
+      
          ;; when no optimize comment out
-         (.loadURL @*win* (str "file://" (.resolve path (js* "__dirname") "../index.html")))
+         (.loadURL (:loading @*win*) (str "file://" (.resolve path (js* "__dirname") "../index.html")))
+         
          ;; when no optimize uncomment
          ;; (.loadURL @*win* (str "file://" (.resolve path (js* "__dirname") "../../../index.html")))
-
-         (.on @*win* "closed" (fn [] (reset! *win* nil))))))
+         
+         ; Check to see if there is a cached user (ie. app is not fresh)
+         (if-let [user (user/get-cached-user)]
+           (do
+             (-> @*win* :loading .close)
+             (swap! *win* assoc :buddylist (BrowserWindow. (clj->js {:width 300 :height 1000 :webPreferences {:nodeIntegration true}})))
+             (.loadURL (:buddylist @*win*) (str "file://" (.resolve path (js* "__dirname") "../html/buddylist.html")))
+             (.on (:buddylist @*win*) "closed" #(swap! *win* dissoc :buddylist)))
+           (do
+             (-> @*win* :loading .close)
+             (swap! *win* assoc :authentication (BrowserWindow. (clj->js {:width 800 :height 600 :webPreferences {:nodeIntegration true}})))
+             (.loadURL (:authentication @*win*) (str "file://" (.resolve path (js* "__dirname") "../html/authentication.html")))
+             (.on (:authentication @*win*) "closed" #(swap! *win* dissoc :authentication)))))))
 
 (nodejs/enable-util-print!)
 
