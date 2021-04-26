@@ -1,0 +1,1 @@
+(ns front.buddylistcljs-front-authentication.dev.init)

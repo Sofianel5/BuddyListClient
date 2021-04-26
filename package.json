@@ -9,7 +9,7 @@
         "electron-packager": "^8.5.1"
     },
     "license": "MIT",
-    "repository": "YOUR_OWN_REPOSITORY",
+    "repository": "https://github.com/Sofianel5/BuddyListClient",
     "dependencies": {
         "axios": "^0.21.1",
         "coffeescript": "^2.5.1",

@@ -28,27 +28,34 @@
                             ["shell" "cmd.exe" "/c" "grunt" "download-electron"]]
             "descjop-externs" ["do"
                                ["externs" "dev-main" "app/dev/js/externs.js"]
-                               ["externs" "dev-front" "app/dev/js/externs_front.js"]
+                               ["externs" "dev-front-initial" "app/dev/js/externs_front.js"]
+                               ["externs" "dev-front-authentication" "app/dev/js/externs_front.js"]
                                ["externs" "prod-main" "app/prod/js/externs.js"]
-                               ["externs" "prod-front" "app/prod/js/externs_front.js"]]
+                               ["externs" "prod-front-initial" "app/prod/js/externs_front.js"]
+                               ["externs" "prod-front-authentication" "app/prod/js/externs_front.js"]]
             "descjop-externs-dev" ["do"
                                    ["externs" "dev-main" "app/dev/js/externs.js"]
-                                   ["externs" "dev-front" "app/dev/js/externs_front.js"]]
+                                   ["externs" "dev-front-initial" "app/dev/js/externs_front.js"]
+                                   ["externs" "dev-front-authentication" "app/dev/js/externs_front.js"]]
             "descjop-externs-prod" ["do"
                                     ["externs" "prod-main" "app/prod/js/externs.js"]
-                                    ["externs" "prod-front" "app/prod/js/externs_front.js"]]
-            "descjop-figwheel" ["trampoline" "figwheel" "dev-front"]
+                                    ["externs" "prod-front-initial" "app/prod/js/externs_front.js"]]
+            "descjop-figwheel" ["trampoline" "figwheel" "dev-front-initial" "dev-front-authentication"]
             "descjop-once" ["do"
                             ["cljsbuild" "once" "dev-main"]
-                            ["cljsbuild" "once" "dev-front"]
+                            ["cljsbuild" "once" "dev-front-initial"]
+                            ["cljsbuild" "once" "dev-front-authentication"]
                             ["cljsbuild" "once" "prod-main"]
-                            ["cljsbuild" "once" "prod-front"]]
+                            ["cljsbuild" "once" "prod-front-initial"]
+                            ["cljsbuild" "once" "prod-front-authentication"]]
             "descjop-once-dev" ["do"
                                 ["cljsbuild" "once" "dev-main"]
-                                ["cljsbuild" "once" "dev-front"]]
+                                ["cljsbuild" "once" "dev-front-initial"]
+                                ["cljsbuild" "once" "dev-front-authentication"]]
             "descjop-once-prod" ["do"
                                  ["cljsbuild" "once" "prod-main"]
-                                 ["cljsbuild" "once" "prod-front"]]
+                                 ["cljsbuild" "once" "prod-front-initial"]
+                                 ["cljsbuild" "once" "prod-front-authentication"]]
             ;; electron packager for production
             "descjop-uberapp-osx" ["shell" "electron-packager" "./app/prod" "buddylistcljs" "--platform=darwin" "--arch=x64" "--electron-version=1.6.6"]
             "descjop-uberapp-app-store" ["shell" "electron-packager" "./app/prod" "buddylistcljs" "--platform=mas" "--arch=x64" "--electron-version=1.6.6"]
@@ -82,11 +89,11 @@
                                              ;;:source-map "app/dev/js/test.js.map"
                                              :pretty-print true
                                              :output-wrapper true}}
-                       :dev-front {:source-paths ["src_front" "src_front_profile/buddylistcljs_front/dev"]
+                       :dev-front-initial {:source-paths ["src_front/buddylistcljs_front_initial/dev"]
                                    :incremental true
                                    :jar true
                                    :assert true
-                                   :compiler {:output-to "app/dev/js/front.js"
+                                   :compiler {:output-to "app/dev/js/front_initial.js"
                                               :externs ["app/dev/js/externs_front.js"]
                                               :warnings true
                                               :elide-asserts true
@@ -94,7 +101,7 @@
 
                                               ;; no optimize compile (dev)
                                               :optimizations :none
-                                              :output-dir "app/dev/js/out_front"
+                                              :output-dir "app/dev/js/out_front/buddylistcljs_front_initial"
 
                                               ;; simple compile (dev)
                                               ;;:optimizations :simple
@@ -105,6 +112,29 @@
                                               ;;:source-map "app/dev/js/test.js.map"
                                               :pretty-print true
                                               :output-wrapper true}}
+                       :dev-front-authentication {:source-paths ["src_front/buddylistcljs_front_authentication/dev"]
+                                           :incremental true
+                                           :jar true
+                                           :assert true
+                                           :compiler {:output-to "app/dev/js/front_authentication.js"
+                                                      :externs ["app/dev/js/externs_front.js"]
+                                                      :warnings true
+                                                      :elide-asserts true
+                                              ;; :target :nodejs
+
+                                              ;; no optimize compile (dev)
+                                                      :optimizations :none
+                                                      :output-dir "app/dev/js/out_front/buddylistcljs_front_authentication"
+
+                                              ;; simple compile (dev)
+                                              ;;:optimizations :simple
+
+                                              ;; advanced compile (prod)
+                                              ;;:optimizations :advanced
+
+                                              ;;:source-map "app/dev/js/test.js.map"
+                                                      :pretty-print true
+                                                      :output-wrapper true}}
                        :prod-main {:source-paths ["src"]
                                    :incremental true
                                    :jar true
@@ -130,11 +160,11 @@
                                               ;;:source-map "app/prod/js/test.js.map"
                                               :pretty-print true
                                               :output-wrapper true}}
-                       :prod-front {:source-paths ["src_front" "src_front_profile/buddylistcljs_front/prod"]
+                       :prod-front-initial {:source-paths ["src_front/buddylistcljs_front_initial/prod"]
                                     :incremental true
                                     :jar true
                                     :assert true
-                                    :compiler {:output-to "app/prod/js/front.js"
+                                    :compiler {:output-to "app/prod/js/front_initial.js"
                                                :externs ["app/prod/js/externs_front.js"]
                                                :warnings true
                                                :elide-asserts true
@@ -142,7 +172,7 @@
 
                                                ;; no optimize compile (dev)
                                                ;;:optimizations :none
-                                               :output-dir "app/prod/js/out_front"
+                                               :output-dir "app/prod/js/out_front/buddylistcljs_front_initial"
 
                                                ;; simple compile (dev)
                                                :optimizations :simple
@@ -152,7 +182,30 @@
 
                                                ;;:source-map "app/prod/js/test.js.map"
                                                :pretty-print true
-                                               :output-wrapper true}}}}
+                                               :output-wrapper true}}
+                       :prod-front-authentication {:source-paths ["src_front/buddylistcljs_front_authentication/prod"]
+                                            :incremental true
+                                            :jar true
+                                            :assert true
+                                            :compiler {:output-to "app/prod/js/front_authentication.js"
+                                                       :externs ["app/prod/js/externs_front.js"]
+                                                       :warnings true
+                                                       :elide-asserts true
+                                               ;; :target :nodejs
+
+                                               ;; no optimize compile (dev)
+                                               ;;:optimizations :none
+                                                       :output-dir "app/prod/js/out_front/buddylistcljs_front_authentication"
+
+                                               ;; simple compile (dev)
+                                                       :optimizations :simple
+
+                                               ;; advanced compile (prod)
+                                               ;;:optimizations :advanced
+
+                                               ;;:source-map "app/prod/js/test.js.map"
+                                                       :pretty-print true
+                                                       :output-wrapper true}}}}
   :figwheel {:http-server-root "public"
              :ring-handler figwheel-middleware/app
              :server-port 3449})

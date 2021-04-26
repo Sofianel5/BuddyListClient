@@ -1,15 +1,15 @@
 (ns buddylistcljs-front.core
-  (:require  [reagent.core :as reagent :refer [atom]]))
+  (:require  [reagent.core :as reagent :refer [atom]]
+             [cljs.nodejs :as nodejs]))
 
-(defonce state (atom {:message "Hello Reagent world"}))
+(def Electron (nodejs/require "electron"))
+
+(def ipc-render (.-ipcRender Electron))
+
+(defonce state (atom {:message "Loading..."}))
 
 (defn root-component []
-  [:h1 (:message @state)
-   [:p "Log in"]
-   [:form {:on-submit #(println %)}
-    [:input {:id "username" :type "text"}]
-    [:input {:id "password" :type "password"}]
-    [:input {:type "submit"}]]])
+  [:h1 (:message @state)])
 
 (defn mount-root [setting]
   (reagent/render [root-component]

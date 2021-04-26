@@ -27194,7 +27194,60 @@ reagent.core.partial.cljs$lang$applyTo = function(a) {
 reagent.core.component_path = function(a) {
   return reagent.impl.component.component_path.call(null, a);
 };
+cljs.nodejs = {};
+cljs.nodejs.require = require;
+cljs.nodejs.process = process;
+cljs.nodejs.enable_util_print_BANG_ = function() {
+  cljs.core._STAR_print_newline_STAR_ = !1;
+  cljs.core.set_print_fn_BANG_.call(null, function() {
+    var a = function(a) {
+      return console.log.apply(console, cljs.core.into_array.call(null, a));
+    }, b = function(b) {
+      var c = null;
+      if (0 < arguments.length) {
+        c = 0;
+        for (var e = Array(arguments.length - 0); c < e.length;) {
+          e[c] = arguments[c + 0], ++c;
+        }
+        c = new cljs.core.IndexedSeq(e, 0, null);
+      }
+      return a.call(this, c);
+    };
+    b.cljs$lang$maxFixedArity = 0;
+    b.cljs$lang$applyTo = function(b) {
+      b = cljs.core.seq(b);
+      return a(b);
+    };
+    b.cljs$core$IFn$_invoke$arity$variadic = a;
+    return b;
+  }());
+  cljs.core.set_print_err_fn_BANG_.call(null, function() {
+    var a = function(a) {
+      return console.error.apply(console, cljs.core.into_array.call(null, a));
+    }, b = function(b) {
+      var c = null;
+      if (0 < arguments.length) {
+        c = 0;
+        for (var e = Array(arguments.length - 0); c < e.length;) {
+          e[c] = arguments[c + 0], ++c;
+        }
+        c = new cljs.core.IndexedSeq(e, 0, null);
+      }
+      return a.call(this, c);
+    };
+    b.cljs$lang$maxFixedArity = 0;
+    b.cljs$lang$applyTo = function(b) {
+      b = cljs.core.seq(b);
+      return a(b);
+    };
+    b.cljs$core$IFn$_invoke$arity$variadic = a;
+    return b;
+  }());
+  return null;
+};
 buddylistcljs_front.core = {};
+buddylistcljs_front.core.Electron = cljs.nodejs.require.call(null, "electron");
+buddylistcljs_front.core.ipc_render = buddylistcljs_front.core.Electron.ipcRender;
 "undefined" === typeof buddylistcljs_front.core.state && (buddylistcljs_front.core.state = reagent.core.atom.call(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "message", "message", -406056002), "Hello Reagent world"], null)));
 buddylistcljs_front.core.root_component = function() {
   return new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "h1", "h1", -1896887462), (new cljs.core.Keyword(null, "message", "message", -406056002)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs_front.core.state)), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null, "p", "p", 151049309), "Log in"], null), new cljs.core.PersistentVector(null, 5, 5, cljs.core.PersistentVector.EMPTY_NODE, 

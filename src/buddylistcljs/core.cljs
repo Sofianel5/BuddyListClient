@@ -35,9 +35,8 @@
                 (.quit app))))
   
   (.on ipc-main "login"
-       (fn [event arg]
-         (println event)
-         (println arg)))
+       (fn [event username password]
+         (.then (user/log-in username password) #(println (str "printing: " %)))))
 
   ;; ready listener
   (.on app "ready"
