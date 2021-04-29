@@ -18,22 +18,23 @@
 
 (defn get-cached-user []
   (if-let [encoded-user (.getItem store user-key)]
-    (-> encoded-user
+    (->> encoded-user
         (.parse js/JSON)
-        (js->clj {:keywordize-keys true}))))
+        #(js->clj % :keywordize-keys true))))
 
 (defn cache-user [user-map]
-  (let [encoded-user (-> user-map
+  (let [encoded-user (->> user-map
                          clj->js
                          (.stringify js/JSON))]
-    (.setItem store user-key encoded-user)))
+    (.setItem store user-key encoded-user)
+    encoded-user))
 
 (defn log-in [username password]
   (if (none-nil username password)
     (let [params {:username username :password password}
           options (clj->js {:method "POST" :url "http://50.16.117.236:8000/login" :params params})
           request (axios options)]
-      (.then request #(-> % (js->clj :keywordize-keys true) :data)))))
+      (.then request #(-> % (js->clj :keywordize-keys true) :data cache-user)))))
 
 (comment (.then (log-in "sofiane" "password") #(println (str "printing: " %))))
 

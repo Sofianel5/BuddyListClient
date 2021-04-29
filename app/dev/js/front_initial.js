@@ -1,7 +1,7 @@
 goog.addDependency("base.js", ['goog'], []);
 goog.addDependency("../cljs/core.js", ['cljs.core'], ['goog.string', 'goog.Uri', 'goog.object', 'goog.math.Integer', 'goog.string.StringBuffer', 'goog.array', 'goog.math.Long']);
 goog.addDependency("../process/env.js", ['process.env'], ['cljs.core']);
-goog.addDependency("../buddylistcljs_front_initial/buddylistcljs_front_initial/buddylistcljs_front_initial.init", ['buddylistcljs_front_initial.conf'], ['cljs.core']);
+goog.addDependency("../buddylistcljs_front_initial/buddylistcljs_front_initial/conf.js", ['buddylistcljs_front_initial.conf'], ['cljs.core']);
 goog.addDependency("../reagent/interop.js", ['reagent.interop'], ['cljs.core']);
 goog.addDependency("../cljsjs/react/development/react.inc.js", ['cljsjs.react'], [], { 'foreign-lib': true });
 goog.addDependency("../reagent/debug.js", ['reagent.debug'], ['cljs.core']);

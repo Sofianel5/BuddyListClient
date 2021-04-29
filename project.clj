@@ -30,32 +30,39 @@
                                ["externs" "dev-main" "app/dev/js/externs.js"]
                                ["externs" "dev-front-initial" "app/dev/js/externs_front.js"]
                                ["externs" "dev-front-authentication" "app/dev/js/externs_front.js"]
+                               ["externs" "dev-front-buddies" "app/dev/js/externs_front.js"]
                                ["externs" "prod-main" "app/prod/js/externs.js"]
                                ["externs" "prod-front-initial" "app/prod/js/externs_front.js"]
-                               ["externs" "prod-front-authentication" "app/prod/js/externs_front.js"]]
+                               ["externs" "prod-front-authentication" "app/prod/js/externs_front.js"]
+                               ["externs" "prod-front-buddies" "app/prod/js/externs_front.js"]]
             "descjop-externs-dev" ["do"
                                    ["externs" "dev-main" "app/dev/js/externs.js"]
                                    ["externs" "dev-front-initial" "app/dev/js/externs_front.js"]
-                                   ["externs" "dev-front-authentication" "app/dev/js/externs_front.js"]]
+                                   ["externs" "dev-front-authentication" "app/dev/js/externs_front.js"]
+                                   ["externs" "dev-front-buddies" "app/dev/js/externs_front.js"]]
             "descjop-externs-prod" ["do"
                                     ["externs" "prod-main" "app/prod/js/externs.js"]
                                     ["externs" "prod-front-initial" "app/prod/js/externs_front.js"]]
-            "descjop-figwheel" ["trampoline" "figwheel" "dev-front-initial" "dev-front-authentication"]
+            "descjop-figwheel" ["trampoline" "figwheel" "dev-front-initial" "dev-front-authentication" "dev-front-buddies"]
             "descjop-once" ["do"
                             ["cljsbuild" "once" "dev-main"]
                             ["cljsbuild" "once" "dev-front-initial"]
                             ["cljsbuild" "once" "dev-front-authentication"]
+                            ["cljsbuild" "once" "dev-front-buddies"]
                             ["cljsbuild" "once" "prod-main"]
                             ["cljsbuild" "once" "prod-front-initial"]
-                            ["cljsbuild" "once" "prod-front-authentication"]]
+                            ["cljsbuild" "once" "prod-front-authentication"]
+                            ["cljsbuild" "once" "prod-front-buddies"]]
             "descjop-once-dev" ["do"
                                 ["cljsbuild" "once" "dev-main"]
                                 ["cljsbuild" "once" "dev-front-initial"]
-                                ["cljsbuild" "once" "dev-front-authentication"]]
+                                ["cljsbuild" "once" "dev-front-authentication"]
+                                ["cljsbuild" "once" "dev-front-buddies"]]
             "descjop-once-prod" ["do"
                                  ["cljsbuild" "once" "prod-main"]
                                  ["cljsbuild" "once" "prod-front-initial"]
-                                 ["cljsbuild" "once" "prod-front-authentication"]]
+                                 ["cljsbuild" "once" "prod-front-authentication"]
+                                 ["cljsbuild" "once" "prod-front-buddies"]]
             ;; electron packager for production
             "descjop-uberapp-osx" ["shell" "electron-packager" "./app/prod" "buddylistcljs" "--platform=darwin" "--arch=x64" "--electron-version=1.6.6"]
             "descjop-uberapp-app-store" ["shell" "electron-packager" "./app/prod" "buddylistcljs" "--platform=mas" "--arch=x64" "--electron-version=1.6.6"]
@@ -135,6 +142,29 @@
                                               ;;:source-map "app/dev/js/test.js.map"
                                                       :pretty-print true
                                                       :output-wrapper true}}
+                       :dev-front-buddies {:source-paths ["src_front/buddylistcljs_front_buddies/dev"]
+                                                  :incremental true
+                                                  :jar true
+                                                  :assert true
+                                                  :compiler {:output-to "app/dev/js/front_buddies.js"
+                                                             :externs ["app/dev/js/externs_front.js"]
+                                                             :warnings true
+                                                             :elide-asserts true
+                                              ;; :target :nodejs
+
+                                              ;; no optimize compile (dev)
+                                                             :optimizations :none
+                                                             :output-dir "app/dev/js/out_front/buddylistcljs_front_buddies"
+
+                                              ;; simple compile (dev)
+                                              ;;:optimizations :simple
+
+                                              ;; advanced compile (prod)
+                                              ;;:optimizations :advanced
+
+                                              ;;:source-map "app/dev/js/test.js.map"
+                                                             :pretty-print true
+                                                             :output-wrapper true}}
                        :prod-main {:source-paths ["src"]
                                    :incremental true
                                    :jar true
@@ -205,7 +235,30 @@
 
                                                ;;:source-map "app/prod/js/test.js.map"
                                                        :pretty-print true
-                                                       :output-wrapper true}}}}
+                                                       :output-wrapper true}}
+                      :prod-front-buddies {:source-paths ["src_front/buddylistcljs_front_buddies/prod"]
+                                                  :incremental true
+                                                  :jar true
+                                                  :assert true
+                                                  :compiler {:output-to "app/prod/js/front_buddies.js"
+                                                             :externs ["app/prod/js/externs_front.js"]
+                                                             :warnings true
+                                                             :elide-asserts true
+                                               ;; :target :nodejs
+
+                                               ;; no optimize compile (dev)
+                                               ;;:optimizations :none
+                                                             :output-dir "app/prod/js/out_front/buddylistcljs_front_buddies"
+
+                                               ;; simple compile (dev)
+                                                             :optimizations :simple
+
+                                               ;; advanced compile (prod)
+                                               ;;:optimizations :advanced
+
+                                               ;;:source-map "app/prod/js/test.js.map"
+                                                             :pretty-print true
+                                                             :output-wrapper true}}}}
   :figwheel {:http-server-root "public"
              :ring-handler figwheel-middleware/app
              :server-port 3449})

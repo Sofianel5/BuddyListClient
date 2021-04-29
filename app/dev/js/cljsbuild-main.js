@@ -24445,6 +24445,57 @@ cljs.core.maybe_enable_print_BANG_();
 cljs.core.eval = function(a) {
   return cljs.core._STAR_eval_STAR_.cljs$core$IFn$_invoke$arity$1 ? cljs.core._STAR_eval_STAR_.cljs$core$IFn$_invoke$arity$1(a) : cljs.core._STAR_eval_STAR_.call(null, a);
 };
+cljs.nodejs = {};
+cljs.nodejs.require = require;
+cljs.nodejs.process = process;
+cljs.nodejs.enable_util_print_BANG_ = function() {
+  cljs.core._STAR_print_newline_STAR_ = !1;
+  cljs.core.set_print_fn_BANG_.call(null, function() {
+    var a = function(a) {
+      return console.log.apply(console, cljs.core.into_array.call(null, a));
+    }, b = function(b) {
+      var c = null;
+      if (0 < arguments.length) {
+        c = 0;
+        for (var e = Array(arguments.length - 0); c < e.length;) {
+          e[c] = arguments[c + 0], ++c;
+        }
+        c = new cljs.core.IndexedSeq(e, 0, null);
+      }
+      return a.call(this, c);
+    };
+    b.cljs$lang$maxFixedArity = 0;
+    b.cljs$lang$applyTo = function(b) {
+      b = cljs.core.seq(b);
+      return a(b);
+    };
+    b.cljs$core$IFn$_invoke$arity$variadic = a;
+    return b;
+  }());
+  cljs.core.set_print_err_fn_BANG_.call(null, function() {
+    var a = function(a) {
+      return console.error.apply(console, cljs.core.into_array.call(null, a));
+    }, b = function(b) {
+      var c = null;
+      if (0 < arguments.length) {
+        c = 0;
+        for (var e = Array(arguments.length - 0); c < e.length;) {
+          e[c] = arguments[c + 0], ++c;
+        }
+        c = new cljs.core.IndexedSeq(e, 0, null);
+      }
+      return a.call(this, c);
+    };
+    b.cljs$lang$maxFixedArity = 0;
+    b.cljs$lang$applyTo = function(b) {
+      b = cljs.core.seq(b);
+      return a(b);
+    };
+    b.cljs$core$IFn$_invoke$arity$variadic = a;
+    return b;
+  }());
+  return null;
+};
 cljs.core.async = {};
 cljs.core.async.impl = {};
 cljs.core.async.impl.protocols = {};
@@ -29618,57 +29669,6 @@ cljs.core.async.partition_by.cljs$core$IFn$_invoke$arity$3 = function(a, b, c) {
   return c;
 };
 cljs.core.async.partition_by.cljs$lang$maxFixedArity = 3;
-cljs.nodejs = {};
-cljs.nodejs.require = require;
-cljs.nodejs.process = process;
-cljs.nodejs.enable_util_print_BANG_ = function() {
-  cljs.core._STAR_print_newline_STAR_ = !1;
-  cljs.core.set_print_fn_BANG_.call(null, function() {
-    var a = function(a) {
-      return console.log.apply(console, cljs.core.into_array.call(null, a));
-    }, b = function(b) {
-      var c = null;
-      if (0 < arguments.length) {
-        c = 0;
-        for (var e = Array(arguments.length - 0); c < e.length;) {
-          e[c] = arguments[c + 0], ++c;
-        }
-        c = new cljs.core.IndexedSeq(e, 0, null);
-      }
-      return a.call(this, c);
-    };
-    b.cljs$lang$maxFixedArity = 0;
-    b.cljs$lang$applyTo = function(b) {
-      b = cljs.core.seq(b);
-      return a(b);
-    };
-    b.cljs$core$IFn$_invoke$arity$variadic = a;
-    return b;
-  }());
-  cljs.core.set_print_err_fn_BANG_.call(null, function() {
-    var a = function(a) {
-      return console.error.apply(console, cljs.core.into_array.call(null, a));
-    }, b = function(b) {
-      var c = null;
-      if (0 < arguments.length) {
-        c = 0;
-        for (var e = Array(arguments.length - 0); c < e.length;) {
-          e[c] = arguments[c + 0], ++c;
-        }
-        c = new cljs.core.IndexedSeq(e, 0, null);
-      }
-      return a.call(this, c);
-    };
-    b.cljs$lang$maxFixedArity = 0;
-    b.cljs$lang$applyTo = function(b) {
-      b = cljs.core.seq(b);
-      return a(b);
-    };
-    b.cljs$core$IFn$_invoke$arity$variadic = a;
-    return b;
-  }());
-  return null;
-};
 var buddylistcljs = {user:{}};
 buddylistcljs.user.none_nil = function(a) {
   for (var b = [], c = arguments.length, d = 0;;) {
@@ -29694,11 +29694,17 @@ buddylistcljs.user.store = new buddylistcljs.user.local_storage("./storage");
 buddylistcljs.user.user_key = "user";
 buddylistcljs.user.get_cached_user = function() {
   var a = buddylistcljs.user.store.getItem(buddylistcljs.user.user_key);
-  return cljs.core.truth_(a) ? cljs.core.js__GT_clj.call(null, a.parse(JSON), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "keywordize-keys", "keywordize-keys", 1310784252), !0], null)) : null;
+  return cljs.core.truth_(a) ? function(a, c) {
+    return function(b) {
+      cljs.core.js__GT_clj.call(null, b, new cljs.core.Keyword(null, "keywordize-keys", "keywordize-keys", 1310784252), !0);
+      return JSON.parse(a);
+    };
+  }(a, a) : null;
 };
 buddylistcljs.user.cache_user = function(a) {
-  a = cljs.core.clj__GT_js.call(null, a).stringify(JSON);
-  return buddylistcljs.user.store.setItem(buddylistcljs.user.user_key, a);
+  a = JSON.stringify(cljs.core.clj__GT_js.call(null, a));
+  buddylistcljs.user.store.setItem(buddylistcljs.user.user_key, a);
+  return a;
 };
 buddylistcljs.user.log_in = function(a, b) {
   if (cljs.core.truth_(buddylistcljs.user.none_nil.call(null, a, b))) {
@@ -29707,7 +29713,7 @@ buddylistcljs.user.log_in = function(a, b) {
     var c = buddylistcljs.user.axios.call(null, b);
     return c.then(function(a, b, c) {
       return function(a) {
-        return (new cljs.core.Keyword(null, "data", "data", -232669377)).cljs$core$IFn$_invoke$arity$1(cljs.core.js__GT_clj.call(null, a, new cljs.core.Keyword(null, "keywordize-keys", "keywordize-keys", 1310784252), !0));
+        return buddylistcljs.user.cache_user.call(null, (new cljs.core.Keyword(null, "data", "data", -232669377)).cljs$core$IFn$_invoke$arity$1(cljs.core.js__GT_clj.call(null, a, new cljs.core.Keyword(null, "keywordize-keys", "keywordize-keys", 1310784252), !0)));
       };
     }(a, b, c));
   }
@@ -29723,6 +29729,8 @@ buddylistcljs.user.sign_up = function(a, b, c) {
 };
 buddylistcljs.core = {};
 buddylistcljs.core.path = cljs.nodejs.require.call(null, "path");
+buddylistcljs.core.ws = cljs.nodejs.require.call(null, "faye-websocket");
+buddylistcljs.core.client = buddylistcljs.core.ws.Client;
 buddylistcljs.core.Electron = cljs.nodejs.require.call(null, "electron");
 buddylistcljs.core.BrowserWindow = buddylistcljs.core.Electron.BrowserWindow;
 buddylistcljs.core.ipc_main = buddylistcljs.core.Electron.ipcMain;
@@ -29738,25 +29746,50 @@ buddylistcljs.core._main = function() {
   buddylistcljs.core.app.on("window-all-closed", function() {
     return cljs.core.not_EQ_.call(null, cljs.nodejs.process.platform, "darwin") ? buddylistcljs.core.app.quit() : null;
   });
-  buddylistcljs.core.ipc_main.on("login", function(a, b, c) {
-    cljs.core.println.call(null, a);
-    cljs.core.println.call(null, b, ", ", c);
-    return buddylistcljs.user.log_in.call(null, b, c).then(function(a) {
-      return cljs.core.println.call(null, ["printing: ", cljs.core.str.cljs$core$IFn$_invoke$arity$1(a)].join(""));
+  buddylistcljs.core.on_buddy_message = function(a) {
+    cljs.core.println.call(null, "Message: ", a.data);
+    a = a.data;
+    cljs.core.println.call(null, "buddies: ", a);
+    (new cljs.core.Keyword(null, "buddylist", "buddylist", 275565366)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).webContents.send("buddies", a);
+    return cljs.core.println.call(null, "sent to client ", (new cljs.core.Keyword(null, "buddylist", "buddylist", 275565366)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).webContents);
+  };
+  buddylistcljs.core.launch_buddylist = function(a) {
+    cljs.core.swap_BANG_.call(null, buddylistcljs.core._STAR_win_STAR_, cljs.core.assoc, new cljs.core.Keyword(null, "buddylist", "buddylist", 275565366), new buddylistcljs.core.BrowserWindow(cljs.core.clj__GT_js.call(null, new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "width", "width", -384071477), 300, new cljs.core.Keyword(null, "height", "height", 1025178622), 700, new cljs.core.Keyword(null, "webPreferences", "webPreferences", -1267169265), new cljs.core.PersistentArrayMap(null, 
+    1, [new cljs.core.Keyword(null, "nodeIntegration", "nodeIntegration", -784873827), !0], null)], null))));
+    (new cljs.core.Keyword(null, "buddylist", "buddylist", 275565366)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).loadURL(["file://", cljs.core.str.cljs$core$IFn$_invoke$arity$1(buddylistcljs.core.path.resolve(__dirname, "../html/buddylist.html"))].join(""));
+    (new cljs.core.Keyword(null, "buddylist", "buddylist", 275565366)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).webContents.on("did-finish-load", function() {
+      var a = new buddylistcljs.core.client("ws://50.16.117.236:8000/buddies", null, cljs.core.clj__GT_js.call(null, new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "headers", "headers", -835030129), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "authorization", "authorization", -166302136), "2b6f0364-a2f8-443f-a358-9e80d6d8c159", new cljs.core.Keyword(null, "request-user", "request-user", 2052007844), "sofiane"], null)], null)));
+      a.on("open", function(a) {
+        return function(a) {
+          return cljs.core.println.call(null, "Opening connection", a);
+        };
+      }(a));
+      a.on("close", function(a) {
+        return function(a) {
+          return cljs.core.println.call(null, "Closing connection", a);
+        };
+      }(a));
+      return a.on("message", buddylistcljs.core.on_buddy_message);
     });
+    return (new cljs.core.Keyword(null, "buddylist", "buddylist", 275565366)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).on("closed", function() {
+      return cljs.core.swap_BANG_.call(null, buddylistcljs.core._STAR_win_STAR_, cljs.core.dissoc, new cljs.core.Keyword(null, "buddylist", "buddylist", 275565366));
+    });
+  };
+  buddylistcljs.core.ipc_main.on("login", function(a, b, c) {
+    return buddylistcljs.user.log_in.call(null, b, c).then(function(a) {
+      (new cljs.core.Keyword(null, "authentication", "authentication", 1746273042)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).close();
+      return buddylistcljs.core.launch_buddylist.call(null, a);
+    });
+  });
+  buddylistcljs.core.ipc_main.on("buddies:selected", function(a, b) {
+    return cljs.core.println.call(null, b);
   });
   return buddylistcljs.core.app.on("ready", function() {
     cljs.core.swap_BANG_.call(null, buddylistcljs.core._STAR_win_STAR_, cljs.core.assoc, new cljs.core.Keyword(null, "loading", "loading", -737050189), new buddylistcljs.core.BrowserWindow(cljs.core.clj__GT_js.call(null, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "width", "width", -384071477), 800, new cljs.core.Keyword(null, "height", "height", 1025178622), 600], null))));
     (new cljs.core.Keyword(null, "loading", "loading", -737050189)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).loadURL(["file://", cljs.core.str.cljs$core$IFn$_invoke$arity$1(buddylistcljs.core.path.resolve(__dirname, "../index.html"))].join(""));
     var a = buddylistcljs.user.get_cached_user.call(null);
     if (cljs.core.truth_(a)) {
-      return (new cljs.core.Keyword(null, "loading", "loading", -737050189)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).close(), cljs.core.swap_BANG_.call(null, buddylistcljs.core._STAR_win_STAR_, cljs.core.assoc, new cljs.core.Keyword(null, "buddylist", "buddylist", 275565366), new buddylistcljs.core.BrowserWindow(cljs.core.clj__GT_js.call(null, new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "width", "width", -384071477), 
-      300, new cljs.core.Keyword(null, "height", "height", 1025178622), 1000, new cljs.core.Keyword(null, "webPreferences", "webPreferences", -1267169265), new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "nodeIntegration", "nodeIntegration", -784873827), !0], null)], null)))), (new cljs.core.Keyword(null, "buddylist", "buddylist", 275565366)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).loadURL(["file://", cljs.core.str.cljs$core$IFn$_invoke$arity$1(buddylistcljs.core.path.resolve(__dirname, 
-      "../html/buddylist.html"))].join("")), (new cljs.core.Keyword(null, "buddylist", "buddylist", 275565366)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).on("closed", function(a, c) {
-        return function() {
-          return cljs.core.swap_BANG_.call(null, buddylistcljs.core._STAR_win_STAR_, cljs.core.dissoc, new cljs.core.Keyword(null, "buddylist", "buddylist", 275565366));
-        };
-      }(a, a));
+      return (new cljs.core.Keyword(null, "loading", "loading", -737050189)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).close(), buddylistcljs.core.launch_buddylist.call(null, a);
     }
     (new cljs.core.Keyword(null, "loading", "loading", -737050189)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).close();
     cljs.core.swap_BANG_.call(null, buddylistcljs.core._STAR_win_STAR_, cljs.core.assoc, new cljs.core.Keyword(null, "authentication", "authentication", 1746273042), new buddylistcljs.core.BrowserWindow(cljs.core.clj__GT_js.call(null, new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "width", "width", -384071477), 800, new cljs.core.Keyword(null, "height", "height", 1025178622), 600, new cljs.core.Keyword(null, "webPreferences", "webPreferences", -1267169265), new cljs.core.PersistentArrayMap(null, 
