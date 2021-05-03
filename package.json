@@ -18,6 +18,8 @@
         "coffeescript": "^2.5.1",
         "faye-websocket": "^0.11.3",
         "node-localstorage": "^2.1.6",
+        "node-window-manager": "^2.2.4",
+        "query-string": "^7.0.0",
         "schema-utils": "2.6.6",
         "utf-8-validate": "^5.0.4"
     }

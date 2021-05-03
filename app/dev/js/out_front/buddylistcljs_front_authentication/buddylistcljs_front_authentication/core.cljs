@@ -13,7 +13,6 @@
   (.preventDefault event)
   (let [username (-> js/document (.getElementById "username") .-value)
         password (-> js/document (.getElementById "password") .-value)]
-    (js/console.log (str username ", " password))
     (.send ipc-renderer "login" username password)))
 
 (defn root-component []

@@ -13,3 +13,5 @@ node_modules/*
 *.ipr
 *.iws
 electron/*
+.calva/
+.cljs_node_repl/

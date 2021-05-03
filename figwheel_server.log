@@ -89,3 +89,116 @@ notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_b
 [0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
 [32mSuccessfully compiled "app/dev/js/front_buddies.js" in 1.353 seconds.[0m
 notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 19.03 seconds.[0m
+notifying browser that file changed:  app/dev/js/front_buddies.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/goog/deps.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_chat.js" from ["src_front/buddylistcljs_front_chat/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_chat.js" in 2.485 seconds.[0m
+notifying browser that file changed:  app/dev/js/front_chat.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/goog/deps.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
+[0mCompiling "app/dev/js/front_chat.js" from ["src_front/buddylistcljs_front_chat/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_chat.js" in 0.875 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
+[0mCompiling "app/dev/js/front_chat.js" from ["src_front/buddylistcljs_front_chat/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_chat.js" in 0.696 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
+[0mCompiling "app/dev/js/front_chat.js" from ["src_front/buddylistcljs_front_chat/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_chat.js" in 0.83 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
+[0mCompiling "app/dev/js/front_chat.js" from ["src_front/buddylistcljs_front_chat/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_chat.js" in 0.755 seconds.[0m
+notifying browser that file changed:  app/dev/js/front_chat.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/goog/deps.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
+[0mCompiling "app/dev/js/front_chat.js" from ["src_front/buddylistcljs_front_chat/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_chat.js" in 0.788 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
+[0mCompiling "app/dev/js/front_chat.js" from ["src_front/buddylistcljs_front_chat/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_chat.js" in 0.699 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
+[0mCompiling "app/dev/js/front_chat.js" from ["src_front/buddylistcljs_front_chat/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_chat.js" in 1.142 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
+[0mCompiling "app/dev/js/front_chat.js" from ["src_front/buddylistcljs_front_chat/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_chat.js" in 0.806 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
+[0mCompiling "app/dev/js/front_chat.js" from ["src_front/buddylistcljs_front_chat/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_chat.js" in 0.912 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 2.775 seconds.[0m
+notifying browser that file changed:  app/dev/js/front_authentication.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/goog/deps.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_chat.js" from ["src_front/buddylistcljs_front_chat/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_chat.js" in 1.208 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[31mFailed to compile "app/dev/js/front_buddies.js" in 1.537 seconds.[0m
+[36m----  Could not Analyze  src_front/buddylistcljs_front_buddies/dev/core.cljs   line:15  column:1  ----[0m
+
+  [1mToo many arguments to def at line 15 src_front/buddylistcljs_front_buddies/dev/core.cljs[0m
+
+  [36m13[0m  [36m(def EVENTCHANNEL (chan))[0m
+  [36m14[0m  [36m[0m
+  [33m15[0m  [1m(def EVENTS[0m
+  [0m  [0m  [33m^--- Too many arguments to def at line 15 src_front/buddylistcljs_front_buddies/dev/core.cljs[0m
+  [36m16[0m  [36m  {:buddy-clicked (fn [username][0m
+  [36m17[0m  [36m                    (.send ipc-renderer "buddies:selected" username))}[0m
+  [36m18[0m  [36m  {:status-updated (fn [new-status][0m
+
+[36m----  Analysis Error : Please see src_front/buddylistcljs_front_buddies/dev/core.cljs  ----[0m
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 1.178 seconds.[0m
+notifying browser that file changed:  app/dev/js/front_buddies.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/goog/deps.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 1.464 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 0.933 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 1.278 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 1.264 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 1.439 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 0.969 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 2.018 seconds.[0m
+notifying browser that file changed:  app/dev/js/front_buddies.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/goog/deps.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 0.794 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 0.546 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 0.701 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 1.142 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 0.757 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_buddies.js" from ["src_front/buddylistcljs_front_buddies/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_buddies.js" in 1.206 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_buddies/buddylistcljs_front_buddies/core.js
+[0mCompiling "app/dev/js/front_chat.js" from ["src_front/buddylistcljs_front_chat/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_chat.js" in 5.323 seconds.[0m
+notifying browser that file changed:  app/dev/js/front_chat.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/goog/deps.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
