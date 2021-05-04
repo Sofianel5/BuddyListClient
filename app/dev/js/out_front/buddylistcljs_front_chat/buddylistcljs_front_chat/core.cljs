@@ -53,7 +53,8 @@
   (.preventDefault event)
   (let [message (-> js/document (.getElementById "chat-input") .-value)]
     (js/console.log message)
-    (.send ipc-renderer (str "chat:sent:" (:with-user data)) message)))
+    (.send ipc-renderer (str "chat:sent:" (:with-user data)) message)
+    (set! (-> js/document (.getElementById "chat-input") .-value) "")))
 
 (defn chat-input []
   [:form {:on-submit #(submit-chat %)}

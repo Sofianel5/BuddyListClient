@@ -55,7 +55,7 @@
 (defn status-update [event-channel]
   [:div {:class "status-updater"}
    [:form {:on-submit #(on-new-status-submit % event-channel)}
-    [:input {:type "text" :id "new-status-input"}]
+    [:input {:type "text" :id "new-status-input" :placeholder "New status"}]
     [:input {:type "submit"}]]])
 
 (defn on-add-buddy [event]
@@ -64,13 +64,15 @@
 
 (defn open-add-buddy []
   [:form {:on-submit #(on-add-buddy %)}
-   [:input {:type "submit"}]])
+   [:input {:type "submit" :value "Add Buddy"}]])
 
 (defn root-component []
   [:div
    [:h4 (str (:username @*user*) ": " (:status @*user*))]
    [status-update EVENTCHANNEL]
-   [buddies-list EVENTCHANNEL @state]
+   (if @state
+     [buddies-list EVENTCHANNEL @state]
+     [:p "Loading buddies..."])
    [open-add-buddy]])
 
 (defn mount-root [setting]

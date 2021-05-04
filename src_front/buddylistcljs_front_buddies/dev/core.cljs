@@ -50,7 +50,8 @@
 
 (defn on-new-status-submit [e event-channel]
   (.preventDefault e)
-  (.send ipc-renderer "buddies:new-status" (.-value (.getElementById js/document "new-status-input"))))
+  (.send ipc-renderer "buddies:new-status" (.-value (.getElementById js/document "new-status-input")))
+  (set! (.-value (.getElementById js/document "new-status-input")) ""))
 
 (defn status-update [event-channel]
   [:div {:class "status-updater"}
@@ -70,7 +71,9 @@
   [:div
    [:h4 (str (:username @*user*) ": " (:status @*user*))]
    [status-update EVENTCHANNEL]
-   [buddies-list EVENTCHANNEL @state]
+   (if @state
+     [buddies-list EVENTCHANNEL @state]
+     [:p "Loading buddies..."])
    [open-add-buddy]])
 
 (defn mount-root [setting]
