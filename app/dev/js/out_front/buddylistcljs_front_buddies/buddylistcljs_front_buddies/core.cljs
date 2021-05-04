@@ -58,11 +58,20 @@
     [:input {:type "text" :id "new-status-input"}]
     [:input {:type "submit"}]]])
 
+(defn on-add-buddy [event]
+  (.preventDefault event)
+  (.send ipc-renderer "open-addbuddy"))
+
+(defn open-add-buddy []
+  [:form {:on-submit #(on-add-buddy %)}
+   [:input {:type "submit"}]])
+
 (defn root-component []
   [:div
    [:h4 (str (:username @*user*) ": " (:status @*user*))]
    [status-update EVENTCHANNEL]
-   [buddies-list EVENTCHANNEL @state]])
+   [buddies-list EVENTCHANNEL @state]
+   [open-add-buddy]])
 
 (defn mount-root [setting]
   (reagent/render [root-component]

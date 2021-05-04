@@ -202,3 +202,59 @@ notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_b
 notifying browser that file changed:  app/dev/js/front_chat.js
 notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/goog/deps.js
 notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_chat/buddylistcljs_front_chat/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 1.861 seconds.[0m
+notifying browser that file changed:  app/dev/js/front_authentication.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/goog/deps.js
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[31mFailed to compile "app/dev/js/front_authentication.js" in 1.003 seconds.[0m
+[36m----  Could not Read  src_front/buddylistcljs_front_authentication/dev/core.cljs   line:47 ----[0m
+
+  [1m/Users/sofiane/Documents/buddylistcljs/src_front/buddylistcljs_front_authentication/dev/core.cljs [line 47, col 6] Invalid keyword: :.[0m
+
+  [36m45[0m  [36m(defn root-component [][0m
+  [36m46[0m  [36m  [:div[0m
+  [33m47[0m  [1m   [:][0m
+  [0m  [0m  [33m   /Users/sofiane/Documents/buddylistcljs/src_front/buddylistcljs_front_authentication/dev/core.cljs [line 47, col 6] Invalid keyword: :.[0m
+  [36m48[0m  [36m   [auth-form]])[0m
+  [36m49[0m  [36m[0m
+  [36m50[0m  [36m(defn mount-root [setting][0m
+
+[36m----  Reader Error : Please see src_front/buddylistcljs_front_authentication/dev/core.cljs  ----[0m
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 0.542 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 0.851 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 1.39 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 0.659 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 0.705 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 0.59 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 0.561 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 0.571 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 0.586 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 0.772 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 1.273 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js
+[0mCompiling "app/dev/js/front_authentication.js" from ["src_front/buddylistcljs_front_authentication/dev"]...[0m
+[32mSuccessfully compiled "app/dev/js/front_authentication.js" in 1.277 seconds.[0m
+notifying browser that file changed:  app/dev/js/out_front/buddylistcljs_front_authentication/buddylistcljs_front_authentication/core.js

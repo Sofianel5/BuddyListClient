@@ -86,7 +86,7 @@ return buddylistcljs.user.cache_user.call(null,new cljs.core.Keyword(null,"data"
 return null;
 }
 });
-buddylistcljs.user.sign_up = (function buddylistcljs$user$sign_up(username,password,phone){
+buddylistcljs.user.sign_up = (function buddylistcljs$user$sign_up(username,phone,password){
 if(cljs.core.truth_(buddylistcljs.user.none_nil.call(null,username,password,phone))){
 var params = new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"username","username",1605666410),username,new cljs.core.Keyword(null,"password","password",417022471),password,new cljs.core.Keyword(null,"phone","phone",-763596057),phone], null);
 var options = cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"method","method",55703592),"POST",new cljs.core.Keyword(null,"url","url",276297046),"http://50.16.117.236:8000/signup",new cljs.core.Keyword(null,"params","params",710516235),params], null));
@@ -122,4 +122,19 @@ return buddylistcljs.user.update_user.call(null,new cljs.core.Keyword(null,"user
 } else {
 return null;
 }
+});
+buddylistcljs.user.add_buddy = (function buddylistcljs$user$add_buddy(username,auth_token,new_buddy){
+var headers = new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"authorization","authorization",-166302136),auth_token,new cljs.core.Keyword(null,"request-user","request-user",2052007844),username], null);
+var params = new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"new-buddy","new-buddy",-1555719642),new_buddy], null);
+var options = cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"method","method",55703592),"POST",new cljs.core.Keyword(null,"url","url",276297046),"http://50.16.117.236:8000/add-buddy",new cljs.core.Keyword(null,"headers","headers",-835030129),headers,new cljs.core.Keyword(null,"params","params",710516235),params], null));
+var request = buddylistcljs.user.axios.call(null,options);
+return request.then(((function (headers,params,options,request){
+return (function (p1__4104_SHARP_){
+return new cljs.core.Keyword(null,"data","data",-232669377).cljs$core$IFn$_invoke$arity$1(cljs.core.js__GT_clj.call(null,p1__4104_SHARP_,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true));
+});})(headers,params,options,request))
+).catch(((function (headers,params,options,request){
+return (function (){
+return cljs.core.identity.call(null,null);
+});})(headers,params,options,request))
+);
 });

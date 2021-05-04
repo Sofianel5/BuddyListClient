@@ -43,16 +43,16 @@ new cljs.core.Keyword(null,"buddylist","buddylist",275565366).cljs$core$IFn$_inv
 new cljs.core.Keyword(null,"buddylist","buddylist",275565366).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)).webContents.on("did-finish-load",(function (){
 new cljs.core.Keyword(null,"buddylist","buddylist",275565366).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)).webContents.send("user",JSON.stringify(cljs.core.clj__GT_js.call(null,cljs.core.deref.call(null,buddylistcljs.core._STAR_user_STAR_))));
 
-var socket = (new buddylistcljs.core.client("ws://50.16.117.236:8000/buddies",null,cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"headers","headers",-835030129),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"authorization","authorization",-166302136),"2b6f0364-a2f8-443f-a358-9e80d6d8c159",new cljs.core.Keyword(null,"request-user","request-user",2052007844),"sofiane"], null)], null))));
+var socket = (new buddylistcljs.core.client("ws://50.16.117.236:8000/buddies",null,cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"headers","headers",-835030129),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"authorization","authorization",-166302136),new cljs.core.Keyword(null,"auth-token","auth-token",30990976).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_user_STAR_)),new cljs.core.Keyword(null,"request-user","request-user",2052007844),new cljs.core.Keyword(null,"username","username",1605666410).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_user_STAR_))], null)], null))));
 socket.on("open",((function (socket){
-return (function (p1__4159_SHARP_){
-return cljs.core.println.call(null,"Opening connection",p1__4159_SHARP_);
+return (function (p1__4160_SHARP_){
+return cljs.core.println.call(null,"Opening connection",p1__4160_SHARP_);
 });})(socket))
 );
 
 socket.on("close",((function (socket){
-return (function (p1__4160_SHARP_){
-return cljs.core.println.call(null,"Closing connection",p1__4160_SHARP_);
+return (function (p1__4161_SHARP_){
+return cljs.core.println.call(null,"Closing connection",p1__4161_SHARP_);
 });})(socket))
 );
 
@@ -82,6 +82,15 @@ new cljs.core.Keyword(null,"authentication","authentication",1746273042).cljs$co
 return buddylistcljs.core.launch_buddylist.call(null);
 }));
 }));
+buddylistcljs.core.ipc_main.on("signup",(function (_,username,phone,password){
+return buddylistcljs.user.sign_up.call(null,username,phone,password).then((function (user){
+cljs.core.reset_BANG_.call(null,buddylistcljs.core._STAR_user_STAR_,user);
+
+new cljs.core.Keyword(null,"authentication","authentication",1746273042).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)).close();
+
+return buddylistcljs.core.launch_buddylist.call(null);
+}));
+}));
 buddylistcljs.core.on_message_recieved = (function buddylistcljs$core$on_message_recieved(with_user,e){
 return cljs.core.get.call(null,new cljs.core.Keyword(null,"chats","chats",518672204).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)),with_user).webContents.send("chat:received",e.data);
 });
@@ -91,22 +100,22 @@ cljs.core.swap_BANG_.call(null,buddylistcljs.core._STAR_win_STAR_,cljs.core.asso
 cljs.core.get.call(null,new cljs.core.Keyword(null,"chats","chats",518672204).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)),with_user).loadFile(buddylistcljs.core.path.resolve(__dirname,"../html/chat.html"),cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"query","query",-1288509510),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"with-user","with-user",1719589037),with_user], null)], null)));
 
 cljs.core.get.call(null,new cljs.core.Keyword(null,"chats","chats",518672204).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)),with_user).webContents.on("did-finish-load",(function (){
-var socket = (new buddylistcljs.core.client(["ws://50.16.117.236:8000/chat?with-user=",cljs.core.str.cljs$core$IFn$_invoke$arity$1(with_user)].join(''),null,cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"headers","headers",-835030129),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"authorization","authorization",-166302136),"2b6f0364-a2f8-443f-a358-9e80d6d8c159",new cljs.core.Keyword(null,"request-user","request-user",2052007844),"sofiane"], null)], null))));
+var socket = (new buddylistcljs.core.client(["ws://50.16.117.236:8000/chat?with-user=",cljs.core.str.cljs$core$IFn$_invoke$arity$1(with_user)].join(''),null,cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"headers","headers",-835030129),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"authorization","authorization",-166302136),new cljs.core.Keyword(null,"auth-token","auth-token",30990976).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_user_STAR_)),new cljs.core.Keyword(null,"request-user","request-user",2052007844),new cljs.core.Keyword(null,"username","username",1605666410).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_user_STAR_))], null)], null))));
 socket.on("open",((function (socket){
-return (function (p1__4161_SHARP_){
-return cljs.core.println.call(null,"Opening connection",p1__4161_SHARP_);
+return (function (p1__4162_SHARP_){
+return cljs.core.println.call(null,"Opening connection",p1__4162_SHARP_);
 });})(socket))
 );
 
 socket.on("close",((function (socket){
-return (function (p1__4162_SHARP_){
-return cljs.core.println.call(null,"Closing connection",p1__4162_SHARP_);
+return (function (p1__4163_SHARP_){
+return cljs.core.println.call(null,"Closing connection",p1__4163_SHARP_);
 });})(socket))
 );
 
 socket.on("message",((function (socket){
-return (function (p1__4163_SHARP_){
-return buddylistcljs.core.on_message_recieved.call(null,with_user,p1__4163_SHARP_);
+return (function (p1__4164_SHARP_){
+return buddylistcljs.core.on_message_recieved.call(null,with_user,p1__4164_SHARP_);
 });})(socket))
 );
 
@@ -129,6 +138,25 @@ return buddylistcljs.core.launch_chat.call(null,username);
 } else {
 return cljs.core.get.call(null,new cljs.core.Keyword(null,"chats","chats",518672204).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)),username).show();
 }
+}));
+buddylistcljs.core.ipc_main.on("addbuddy",(function (_,buddy_username){
+return buddylistcljs.user.add_buddy.call(null,new cljs.core.Keyword(null,"username","username",1605666410).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_user_STAR_)),new cljs.core.Keyword(null,"auth-token","auth-token",30990976).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_user_STAR_)),buddy_username).then((function (m){
+new cljs.core.Keyword(null,"buddylist","buddylist",275565366).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)).reload();
+
+return new cljs.core.Keyword(null,"add-buddy","add-buddy",687628777).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)).close();
+}));
+}));
+buddylistcljs.core.open_addbuddy_win = (function buddylistcljs$core$open_addbuddy_win(){
+cljs.core.swap_BANG_.call(null,buddylistcljs.core._STAR_win_STAR_,cljs.core.assoc,new cljs.core.Keyword(null,"add-buddy","add-buddy",687628777),(new buddylistcljs.core.BrowserWindow(cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"width","width",-384071477),(300),new cljs.core.Keyword(null,"height","height",1025178622),(300),new cljs.core.Keyword(null,"webPreferences","webPreferences",-1267169265),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"nodeIntegration","nodeIntegration",-784873827),true,new cljs.core.Keyword(null,"contextIsolation","contextIsolation",-277188069),false], null)], null)))));
+
+new cljs.core.Keyword(null,"add-buddy","add-buddy",687628777).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)).loadURL(["file://",cljs.core.str.cljs$core$IFn$_invoke$arity$1(buddylistcljs.core.path.resolve(__dirname,"../html/addbuddy.html"))].join(''));
+
+return new cljs.core.Keyword(null,"add-buddy","add-buddy",687628777).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)).on("closed",(function (){
+return cljs.core.swap_BANG_.call(null,buddylistcljs.core._STAR_win_STAR_,cljs.core.dissoc,new cljs.core.Keyword(null,"add-buddy","add-buddy",687628777));
+}));
+});
+buddylistcljs.core.ipc_main.on("open-addbuddy",(function (_){
+return buddylistcljs.core.open_addbuddy_win.call(null);
 }));
 buddylistcljs.core.launch_unauth_flow = (function buddylistcljs$core$launch_unauth_flow(){
 new cljs.core.Keyword(null,"loading","loading",-737050189).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)).close();
@@ -165,11 +193,11 @@ var temp__4655__auto__ = buddylistcljs.user.get_user.call(null);
 if(cljs.core.truth_(temp__4655__auto__)){
 var user = temp__4655__auto__;
 return user.then(((function (user,temp__4655__auto__){
-return (function (p1__4164_SHARP_){
-if(cljs.core.truth_(p1__4164_SHARP_)){
-cljs.core.println.call(null,"User:",p1__4164_SHARP_);
+return (function (p1__4165_SHARP_){
+if(cljs.core.truth_(p1__4165_SHARP_)){
+cljs.core.println.call(null,"User:",p1__4165_SHARP_);
 
-cljs.core.reset_BANG_.call(null,buddylistcljs.core._STAR_user_STAR_,p1__4164_SHARP_);
+cljs.core.reset_BANG_.call(null,buddylistcljs.core._STAR_user_STAR_,p1__4165_SHARP_);
 
 new cljs.core.Keyword(null,"loading","loading",-737050189).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)).close();
 

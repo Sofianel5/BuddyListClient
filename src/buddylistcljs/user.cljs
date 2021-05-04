@@ -51,7 +51,7 @@
 
 (comment (.then (log-in "sofiane" "password") #(println (str "printing: " %))))
 
-(defn sign-up [username password phone]
+(defn sign-up [username phone password]
   (if (none-nil username password phone)
     (let [params {:username username :password password :phone phone}
           options (clj->js {:method "POST" :url "http://50.16.117.236:8000/signup" :params params})
@@ -72,3 +72,12 @@
   (if-let [user (get-cached-user)]
     (update-user (:username user) (:auth-token user))
     nil))
+
+(defn add-buddy [username auth-token new-buddy]
+  (let [headers {:authorization auth-token :request-user username}
+        params {:new-buddy new-buddy}
+        options (clj->js {:method "POST" :url "http://50.16.117.236:8000/add-buddy" :headers headers :params params})
+        request (axios options)]
+    (-> request
+        (.then #(-> % (js->clj :keywordize-keys true) :data))
+        (.catch #(identity nil)))))

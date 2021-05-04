@@ -68,6 +68,13 @@
                                                 (-> @*win* :authentication .close)
                                                 (launch-buddylist)))))
 
+(.on ipc-main "signup"
+     (fn [_ username phone password]
+       (.then (user/sign-up username phone password) (fn [user]
+                                                (reset! *user* user)
+                                                (-> @*win* :authentication .close)
+                                                (launch-buddylist)))))
+
 (defn on-message-recieved [with-user e]
   (.send (-> @*win* :chats (get with-user) .-webContents) "chat:received" (.-data e)))
 
@@ -95,6 +102,22 @@
        (if-not (contains? (:chats @*win*) username)
          (launch-chat username)
          (.show (-> @*win* :chats (get username))))))
+
+(.on ipc-main "addbuddy"
+     (fn [_ buddy-username]
+       (.then (user/add-buddy (:username @*user*) (:auth-token @*user*) buddy-username)
+              (fn [m]
+                (.reload (-> @*win* :buddylist))
+                (.close (-> @*win* :add-buddy))))))
+
+(defn open-addbuddy-win []
+  (swap! *win* assoc :add-buddy (BrowserWindow. (clj->js {:width 300 :height 300 :webPreferences {:nodeIntegration true :contextIsolation false}})))
+  (.loadURL (:add-buddy @*win*) (str "file://" (.resolve path (js* "__dirname") "../html/addbuddy.html")))
+  (.on (:add-buddy @*win*) "closed" #(swap! *win* dissoc :add-buddy)))
+
+(.on ipc-main "open-addbuddy"
+     (fn [_]
+       (open-addbuddy-win)))
 
 (defn launch-unauth-flow []
   (-> @*win* :loading .close)
@@ -135,7 +158,7 @@
                             (launch-unauth-flow)))
            (launch-unauth-flow)))))
 
-(nodejs/enable-util-print!)
+           (nodejs/enable-util-print!)
 
 ;;; "Linux" or "Darwin" or "Windows_NT"
 (.log js/console (str "Start descjop application on " (.type Os) "."))
