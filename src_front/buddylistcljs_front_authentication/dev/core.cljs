@@ -42,9 +42,9 @@
 
 (defn auth-type-form []
   [:form
-   [:input {:type :radio :name :auth-type :value :login :checked true :on-change #(swap! state assoc :type :login)}]
+   [:input {:type :radio :name :auth-type :value :login :checked (= (:type @state) :login) :on-change #(swap! state assoc :type :login)}]
    [:p "Log in"]
-   [:input {:type :radio :name :auth-type :value :sign-up :on-change #(swap! state assoc :type :sign-up)}]
+   [:input {:type :radio :name :auth-type :value :sign-up :checked (= (:type @state) :sign-up) :on-change #(swap! state assoc :type :sign-up)}]
    [:p "Sign up"]])
 
 (defn root-component []
