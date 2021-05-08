@@ -12,6 +12,8 @@
 
 (def BrowserWindow (.-BrowserWindow Electron))
 
+(def Menu (.-Menu Electron))
+
 (def ipc-main (.-ipcMain Electron))
 
 (def crash-reporter (.-crashReporter Electron))
@@ -23,6 +25,54 @@
 (def *user* (atom {}))
 
 (def app (.-app Electron))
+
+(if (.-isPackaged app)
+  (set! (-> nodejs/process .-env .-NODE_ENV) "production")
+  (println (-> nodejs/process .-env .-NODE_ENV)))
+
+(def application-menu-template [{:label "File"
+                                 :submenu [{:label "Open buddy list"
+                                            :click #(println "open buddy list")}
+                                           {:label "Close Window"}]}
+                                {:label "Edit"
+                                 :submenu [{:label "Undo"
+                                            :accelerator "CmdOrCtrl+Z"
+                                            :selector "undo:"}
+                                           {:label "Redo"
+                                            :accelerator "Shift+CmdOrCtrl+Z"
+                                            :selector "redo:"}
+                                           {:label "Cut"
+                                            :accelerator "CmdOrCtrl+X"
+                                            :selector "cut:"}
+                                           {:label "Copy"
+                                            :accelerator "CmdOrCtrl+C"
+                                            :selector "copy:"}
+                                           {:label "Paste"
+                                            :accelerator "CmdOrCtrl+V"
+                                            :selector "paste:"}
+                                           {:label "Select All"
+                                            :accelerator "CmdOrCtrl+A"
+                                            :selector "selectAll:"}]}
+                                {:label "Buddies"
+                                 :submenu [{:label "Add Buddy"
+                                            :click #(println "Add buddy")}
+                                           {:label "Remove Buddy"
+                                            :click #(println "remove buddy")}]}])
+
+(if (= (.-platform nodejs/process) "darwin")
+  (def application-menu-template (into [{:label "BuddyList"
+                                         :submenu [{:label "Quit"
+                                                    :accelerator (if (= (.-platform nodejs/process) "darwin") "Command+Q" "Ctrl+Q")
+                                                    :click #(.quit app)}]}] application-menu-template)))
+
+(if (not= (-> nodejs/process .-env .-NODE_ENV) "production")
+  (def application-menu-template (conj application-menu-template {:label "Developer Tools"
+                                                                  :submenu [{:label "Toggle DevTools"
+                                                                             :click #(.toggleDevTools %2)
+                                                                             :accelerator (if (= (.-platform nodejs/process) "darwin") "Command+I" "Ctrl+I")}]})))
+(def application-menu-template (clj->js application-menu-template))
+
+(println (.stringify js/JSON application-menu-template))
 
 (defn on-buddy-message [e]
   (println "Message: " (.-data e))
@@ -71,9 +121,9 @@
 (.on ipc-main "signup"
      (fn [_ username phone password]
        (.then (user/sign-up username phone password) (fn [user]
-                                                (reset! *user* user)
-                                                (-> @*win* :authentication .close)
-                                                (launch-buddylist)))))
+                                                       (reset! *user* user)
+                                                       (-> @*win* :authentication .close)
+                                                       (launch-buddylist)))))
 
 (defn on-message-recieved [with-user e]
   (.send (-> @*win* :chats (get with-user) .-webContents) "chat:received" (.-data e)))
@@ -94,7 +144,6 @@
                                              clj->js
                                              (.stringify js/JSON))]
                     (.send socket encoded-message)))))))
-
   (.on (-> @*win* :chats (get with-user)) "closed" #(swap! *win* dissoc-in [:chats with-user])))
 
 (.on ipc-main "buddies:selected"
@@ -127,7 +176,7 @@
 
 (defn -main []
   (.start crash-reporter (clj->js {:companyName "BuddyList"
-                                   :submitURL   "http://buddylistapp.com"}))
+                                   :submitURL   "http://buddylist.io"}))
 
   ;; error listener
   (.on nodejs/process "error"
@@ -156,9 +205,11 @@
                                 (launch-buddylist)
                                 (user/cache-user @*user*))
                             (launch-unauth-flow)))
-           (launch-unauth-flow)))))
+           (launch-unauth-flow))))
 
-           (nodejs/enable-util-print!)
+  (.setApplicationMenu Menu (.buildFromTemplate Menu application-menu-template)))
+
+(nodejs/enable-util-print!)
 
 ;;; "Linux" or "Darwin" or "Windows_NT"
 (.log js/console (str "Start descjop application on " (.type Os) "."))

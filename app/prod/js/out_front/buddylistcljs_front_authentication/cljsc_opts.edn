@@ -1,0 +1,1 @@
+{:output-wrapper true, :output-dir "app/prod/js/out_front/buddylistcljs_front_authentication", :externs ["app/prod/js/externs_front.js" "closure-js/externs"], :elide-asserts true, :optimizations :simple, :warnings true, :output-to "app/prod/js/front_authentication.js", :libs ["closure-js/libs"], :pretty-print true}

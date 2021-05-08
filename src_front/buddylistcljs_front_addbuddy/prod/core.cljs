@@ -6,10 +6,18 @@
 
 (def ipc-renderer (.-ipcRenderer Electron))
 
-(defonce state (atom {:message "Loading..."}))
+(defonce state (atom {:buddy nil}))
+
+(defn on-submit-add-form [event]
+  (.preventDefault event)
+  (if-let [buddy (-> js/document (.getElementById "buddy") .-value)]
+    (.send ipc-renderer "addbuddy" buddy)))
 
 (defn root-component []
-  [:h1 (:message @state)])
+  [:form {:on-submit #(on-submit-add-form %)}
+   ;later add option to add by phone number
+   [:input {:type "text" :name "buddy" :placeholder "Buddy's username" :id "buddy"}]
+   [:input {:type "submit"}]])
 
 (defn mount-root [setting]
   (reagent/render [root-component]

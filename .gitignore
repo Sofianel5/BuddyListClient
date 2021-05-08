@@ -15,3 +15,6 @@ node_modules/*
 electron/*
 .calva/
 .cljs_node_repl/
+.vscode/
+storage/
+BuddyList-darwin-x64/

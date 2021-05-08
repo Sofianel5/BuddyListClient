@@ -38,9 +38,30 @@ var self__4485__auto__ = this;
 return self__4485__auto__.cljs$core$IFn$_invoke$arity$variadic(cljs.core.seq.call(null,seq4095));
 });
 
+buddylistcljs.user.path = cljs.nodejs.require.call(null,"path");
 buddylistcljs.user.axios = cljs.nodejs.require.call(null,"axios");
 buddylistcljs.user.local_storage = cljs.nodejs.require.call(null,"node-localstorage").LocalStorage;
-buddylistcljs.user.store = (new buddylistcljs.user.local_storage("./storage"));
+buddylistcljs.user.get_prod_folder = (function buddylistcljs$user$get_prod_folder(){
+var G__4099 = cljs.nodejs.process.platform;
+switch (G__4099) {
+case "darwin":
+return buddylistcljs.user.path.join(cljs.nodejs.process.env.HOME,"Library","Application Support","BuddyList");
+
+break;
+case "win32":
+return buddylistcljs.user.path.join(cljs.nodejs.process.env.APPDATA,"BuddyList");
+
+break;
+case "linux":
+return buddylistcljs.user.path.join(cljs.nodejs.process.env.HOME,".BuddyList");
+
+break;
+default:
+throw (new Error(["No matching clause: ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(G__4099)].join('')));
+
+}
+});
+buddylistcljs.user.store = (new buddylistcljs.user.local_storage(buddylistcljs.user.get_prod_folder.call(null)));
 buddylistcljs.user.user_key = "user";
 buddylistcljs.user.buddies_key = "buddies";
 buddylistcljs.user.get_cached_user = (function buddylistcljs$user$get_cached_user(){
@@ -78,8 +99,8 @@ var params = new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(nu
 var options = cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"method","method",55703592),"POST",new cljs.core.Keyword(null,"url","url",276297046),"http://50.16.117.236:8000/login",new cljs.core.Keyword(null,"params","params",710516235),params], null));
 var request = buddylistcljs.user.axios.call(null,options);
 return request.then(((function (params,options,request){
-return (function (p1__4099_SHARP_){
-return buddylistcljs.user.cache_user.call(null,new cljs.core.Keyword(null,"data","data",-232669377).cljs$core$IFn$_invoke$arity$1(cljs.core.js__GT_clj.call(null,p1__4099_SHARP_,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true)));
+return (function (p1__4101_SHARP_){
+return buddylistcljs.user.cache_user.call(null,new cljs.core.Keyword(null,"data","data",-232669377).cljs$core$IFn$_invoke$arity$1(cljs.core.js__GT_clj.call(null,p1__4101_SHARP_,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true)));
 });})(params,options,request))
 );
 } else {
@@ -92,8 +113,8 @@ var params = new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(nu
 var options = cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"method","method",55703592),"POST",new cljs.core.Keyword(null,"url","url",276297046),"http://50.16.117.236:8000/signup",new cljs.core.Keyword(null,"params","params",710516235),params], null));
 var request = buddylistcljs.user.axios.call(null,options);
 return request.then(((function (params,options,request){
-return (function (p1__4101_SHARP_){
-return buddylistcljs.user.cache_user.call(null,new cljs.core.Keyword(null,"data","data",-232669377).cljs$core$IFn$_invoke$arity$1(cljs.core.js__GT_clj.call(null,p1__4101_SHARP_,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true)));
+return (function (p1__4103_SHARP_){
+return buddylistcljs.user.cache_user.call(null,new cljs.core.Keyword(null,"data","data",-232669377).cljs$core$IFn$_invoke$arity$1(cljs.core.js__GT_clj.call(null,p1__4103_SHARP_,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true)));
 });})(params,options,request))
 );
 } else {
@@ -105,8 +126,8 @@ var headers = new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(n
 var options = cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"method","method",55703592),"POST",new cljs.core.Keyword(null,"url","url",276297046),"http://50.16.117.236:8000/user",new cljs.core.Keyword(null,"headers","headers",-835030129),headers], null));
 var request = buddylistcljs.user.axios.call(null,options);
 return request.then(((function (headers,options,request){
-return (function (p1__4103_SHARP_){
-return new cljs.core.Keyword(null,"data","data",-232669377).cljs$core$IFn$_invoke$arity$1(cljs.core.js__GT_clj.call(null,p1__4103_SHARP_,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true));
+return (function (p1__4105_SHARP_){
+return new cljs.core.Keyword(null,"data","data",-232669377).cljs$core$IFn$_invoke$arity$1(cljs.core.js__GT_clj.call(null,p1__4105_SHARP_,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true));
 });})(headers,options,request))
 ).catch(((function (headers,options,request){
 return (function (){
@@ -129,8 +150,8 @@ var params = new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(nu
 var options = cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 4, [new cljs.core.Keyword(null,"method","method",55703592),"POST",new cljs.core.Keyword(null,"url","url",276297046),"http://50.16.117.236:8000/add-buddy",new cljs.core.Keyword(null,"headers","headers",-835030129),headers,new cljs.core.Keyword(null,"params","params",710516235),params], null));
 var request = buddylistcljs.user.axios.call(null,options);
 return request.then(((function (headers,params,options,request){
-return (function (p1__4104_SHARP_){
-return new cljs.core.Keyword(null,"data","data",-232669377).cljs$core$IFn$_invoke$arity$1(cljs.core.js__GT_clj.call(null,p1__4104_SHARP_,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true));
+return (function (p1__4106_SHARP_){
+return new cljs.core.Keyword(null,"data","data",-232669377).cljs$core$IFn$_invoke$arity$1(cljs.core.js__GT_clj.call(null,p1__4106_SHARP_,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true));
 });})(headers,params,options,request))
 ).catch(((function (headers,params,options,request){
 return (function (){

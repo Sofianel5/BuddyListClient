@@ -1,5 +1,5 @@
 (ns buddylistcljs-front-chat.core
-  (:require-macros 
+  (:require-macros
    [cljs.core.async.macros :refer (go)])
   (:require
    [clojure.string :refer [split]]
@@ -26,21 +26,25 @@
 
 (def EVENTS
   {:message-sent (fn [message]
-                    (.send ipc-renderer (str "chat:sent:" (:with-user data)) message))})
+                   (.send ipc-renderer (str "chat:sent:" (:with-user data)) message))})
 
 (go
   (while true
     (let [[event-name event-data] (<! EVENTCHANNEL)]
       ((event-name EVENTS) event-data))))
 
-(.on ipc-renderer "chat:received" 
-     (fn [_ message] 
+(.on ipc-renderer "chat:received"
+     (fn [_ message]
        (println message)
        (let [parsed (.parse js/JSON message)
              messages (js->clj parsed :keywordize-keys true)]
          (if (= (empty messages) [])
            (swap! state (comp vec flatten conj) messages)
-           (swap! state conj messages)))))
+           (swap! state conj messages))
+         ; Pretty sure I should use cond-> here
+         (if (= (-> messages last) (:with-user data))
+           (.play (js/Audio. "../assets/imrcv.wav"))
+           (.play (js/Audio. "../assets/imsend.wav"))))))
 
 (defn message-list [messages]
   [:ul {:class "message-list"}
@@ -62,7 +66,7 @@
    [:input {:type "submit"}]])
 
 (defn root-component []
-  [:div 
+  [:div
    [:h4 (str "Conversation with " (:with-user data))]
    [message-list @state]
    [chat-input]])

@@ -8,11 +8,19 @@
   [& items]
   (not (some nil? items)))
 
+(def path (nodejs/require "path"))
+
 (def axios (nodejs/require "axios"))
 
 (def local-storage (.-LocalStorage (nodejs/require "node-localstorage")))
 
-(def store (local-storage. "./storage"))
+(defn get-prod-folder []
+  (case (.-platform nodejs/process)
+    "darwin" (.join path (-> nodejs/process .-env .-HOME) "Library" "Application Support" "BuddyList")
+    "win32" (.join path (-> nodejs/process .-env .-APPDATA) "BuddyList")
+    "linux" (.join path (-> nodejs/process .-env .-HOME) ".BuddyList")))
+
+(def store (local-storage. (get-prod-folder)))
 
 (def user-key "user")
 

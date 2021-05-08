@@ -25,8 +25,8 @@
                             ["shell" "npm" "install"]
                             ["shell" "grunt" "download-electron"]]
             "descjop-init-win" ["do"
-                            ["shell" "cmd.exe" "/c" "npm" "install"]
-                            ["shell" "cmd.exe" "/c" "grunt" "download-electron"]]
+                                ["shell" "cmd.exe" "/c" "npm" "install"]
+                                ["shell" "cmd.exe" "/c" "grunt" "download-electron"]]
             "descjop-externs" ["do"
                                ["externs" "dev-main" "app/dev/js/externs.js"]
                                ["externs" "dev-front-initial" "app/dev/js/externs_front.js"]
@@ -80,12 +80,11 @@
                                  ["cljsbuild" "once" "prod-front-addbuddy"]]
             ;; electron packager for production
             ;; TODO: Edit version
-            "descjop-uberapp-osx" ["shell" "electron-packager" "./app/prod" "buddylistcljs" "--platform=darwin" "--arch=x64" "--electron-version=1.6.6"]
-            "descjop-uberapp-app-store" ["shell" "electron-packager" "./app/prod" "buddylistcljs" "--platform=mas" "--arch=x64" "--electron-version=1.6.6"]
-            "descjop-uberapp-linux" ["shell" "electron-packager" "./app/prod" "buddylistcljs" "--platform=linux" "--arch=x64" "--electron-version=1.6.6"]
-            "descjop-uberapp-win64" ["shell" "cmd.exe" "/c" "electron-packager" "./app/prod" "buddylistcljs" "--platform=win32" "--arch=x64" "--electron-version=1.6.6"]
-            "descjop-uberapp-win32" ["shell" "cmd.exe" "/c" "electron-packager" "./app/prod" "buddylistcljs" "--platform=win32" "--arch=ia32" "--electron-version=1.6.6"]
-            }
+            "descjop-uberapp-osx" ["shell" "electron-packager" "./app/prod" "BuddyList" "--platform=darwin" "--arch=x64" "--electron-version=12.0.6"]
+            "descjop-uberapp-app-store" ["shell" "electron-packager" "./app/prod" "BuddyList" "--platform=mas" "--arch=x64" "--electron-version=12.0.6"]
+            "descjop-uberapp-linux" ["shell" "electron-packager" "./app/prod" "BuddyList" "--platform=linux" "--arch=x64" "--electron-version=12.0.6"]
+            "descjop-uberapp-win64" ["shell" "cmd.exe" "/c" "electron-packager" "./app/prod" "BuddyList" "--platform=win32" "--arch=x64" "--electron-version=12.0.6"]
+            "descjop-uberapp-win32" ["shell" "cmd.exe" "/c" "electron-packager" "./app/prod" "BuddyList" "--platform=win32" "--arch=ia32" "--electron-version=12.0.6"]}
   :hooks [leiningen.cljsbuild]
   :cljsbuild {:builds {:dev-main {:source-paths ["src"]
                                   :incremental true
@@ -113,33 +112,10 @@
                                              :pretty-print true
                                              :output-wrapper true}}
                        :dev-front-initial {:source-paths ["src_front/buddylistcljs_front_initial/dev"]
-                                   :incremental true
-                                   :jar true
-                                   :assert true
-                                   :compiler {:output-to "app/dev/js/front_initial.js"
-                                              :externs ["app/dev/js/externs_front.js"]
-                                              :warnings true
-                                              :elide-asserts true
-                                              ;; :target :nodejs
-
-                                              ;; no optimize compile (dev)
-                                              :optimizations :none
-                                              :output-dir "app/dev/js/out_front/buddylistcljs_front_initial"
-
-                                              ;; simple compile (dev)
-                                              ;;:optimizations :simple
-
-                                              ;; advanced compile (prod)
-                                              ;;:optimizations :advanced
-
-                                              ;;:source-map "app/dev/js/test.js.map"
-                                              :pretty-print true
-                                              :output-wrapper true}}
-                       :dev-front-authentication {:source-paths ["src_front/buddylistcljs_front_authentication/dev"]
                                            :incremental true
                                            :jar true
                                            :assert true
-                                           :compiler {:output-to "app/dev/js/front_authentication.js"
+                                           :compiler {:output-to "app/dev/js/front_initial.js"
                                                       :externs ["app/dev/js/externs_front.js"]
                                                       :warnings true
                                                       :elide-asserts true
@@ -147,7 +123,7 @@
 
                                               ;; no optimize compile (dev)
                                                       :optimizations :none
-                                                      :output-dir "app/dev/js/out_front/buddylistcljs_front_authentication"
+                                                      :output-dir "app/dev/js/out_front/buddylistcljs_front_initial"
 
                                               ;; simple compile (dev)
                                               ;;:optimizations :simple
@@ -158,11 +134,11 @@
                                               ;;:source-map "app/dev/js/test.js.map"
                                                       :pretty-print true
                                                       :output-wrapper true}}
-                       :dev-front-buddies {:source-paths ["src_front/buddylistcljs_front_buddies/dev"]
+                       :dev-front-authentication {:source-paths ["src_front/buddylistcljs_front_authentication/dev"]
                                                   :incremental true
                                                   :jar true
                                                   :assert true
-                                                  :compiler {:output-to "app/dev/js/front_buddies.js"
+                                                  :compiler {:output-to "app/dev/js/front_authentication.js"
                                                              :externs ["app/dev/js/externs_front.js"]
                                                              :warnings true
                                                              :elide-asserts true
@@ -170,7 +146,7 @@
 
                                               ;; no optimize compile (dev)
                                                              :optimizations :none
-                                                             :output-dir "app/dev/js/out_front/buddylistcljs_front_buddies"
+                                                             :output-dir "app/dev/js/out_front/buddylistcljs_front_authentication"
 
                                               ;; simple compile (dev)
                                               ;;:optimizations :simple
@@ -181,11 +157,11 @@
                                               ;;:source-map "app/dev/js/test.js.map"
                                                              :pretty-print true
                                                              :output-wrapper true}}
-                       :dev-front-chat {:source-paths ["src_front/buddylistcljs_front_chat/dev"]
+                       :dev-front-buddies {:source-paths ["src_front/buddylistcljs_front_buddies/dev"]
                                            :incremental true
                                            :jar true
                                            :assert true
-                                           :compiler {:output-to "app/dev/js/front_chat.js"
+                                           :compiler {:output-to "app/dev/js/front_buddies.js"
                                                       :externs ["app/dev/js/externs_front.js"]
                                                       :warnings true
                                                       :elide-asserts true
@@ -193,7 +169,7 @@
 
                                               ;; no optimize compile (dev)
                                                       :optimizations :none
-                                                      :output-dir "app/dev/js/out_front/buddylistcljs_front_chat"
+                                                      :output-dir "app/dev/js/out_front/buddylistcljs_front_buddies"
 
                                               ;; simple compile (dev)
                                               ;;:optimizations :simple
@@ -204,11 +180,11 @@
                                               ;;:source-map "app/dev/js/test.js.map"
                                                       :pretty-print true
                                                       :output-wrapper true}}
-                       :dev-front-addbuddy {:source-paths ["src_front/buddylistcljs_front_addbuddy/dev"]
+                       :dev-front-chat {:source-paths ["src_front/buddylistcljs_front_chat/dev"]
                                         :incremental true
                                         :jar true
                                         :assert true
-                                        :compiler {:output-to "app/dev/js/front_addbuddy.js"
+                                        :compiler {:output-to "app/dev/js/front_chat.js"
                                                    :externs ["app/dev/js/externs_front.js"]
                                                    :warnings true
                                                    :elide-asserts true
@@ -216,7 +192,7 @@
 
                                               ;; no optimize compile (dev)
                                                    :optimizations :none
-                                                   :output-dir "app/dev/js/out_front/buddylistcljs_front_addbuddy"
+                                                   :output-dir "app/dev/js/out_front/buddylistcljs_front_chat"
 
                                               ;; simple compile (dev)
                                               ;;:optimizations :simple
@@ -227,6 +203,29 @@
                                               ;;:source-map "app/dev/js/test.js.map"
                                                    :pretty-print true
                                                    :output-wrapper true}}
+                       :dev-front-addbuddy {:source-paths ["src_front/buddylistcljs_front_addbuddy/dev"]
+                                            :incremental true
+                                            :jar true
+                                            :assert true
+                                            :compiler {:output-to "app/dev/js/front_addbuddy.js"
+                                                       :externs ["app/dev/js/externs_front.js"]
+                                                       :warnings true
+                                                       :elide-asserts true
+                                              ;; :target :nodejs
+
+                                              ;; no optimize compile (dev)
+                                                       :optimizations :none
+                                                       :output-dir "app/dev/js/out_front/buddylistcljs_front_addbuddy"
+
+                                              ;; simple compile (dev)
+                                              ;;:optimizations :simple
+
+                                              ;; advanced compile (prod)
+                                              ;;:optimizations :advanced
+
+                                              ;;:source-map "app/dev/js/test.js.map"
+                                                       :pretty-print true
+                                                       :output-wrapper true}}
                        :prod-main {:source-paths ["src"]
                                    :incremental true
                                    :jar true
@@ -253,33 +252,10 @@
                                               :pretty-print true
                                               :output-wrapper true}}
                        :prod-front-initial {:source-paths ["src_front/buddylistcljs_front_initial/prod"]
-                                    :incremental true
-                                    :jar true
-                                    :assert true
-                                    :compiler {:output-to "app/prod/js/front_initial.js"
-                                               :externs ["app/prod/js/externs_front.js"]
-                                               :warnings true
-                                               :elide-asserts true
-                                               ;; :target :nodejs
-
-                                               ;; no optimize compile (dev)
-                                               ;;:optimizations :none
-                                               :output-dir "app/prod/js/out_front/buddylistcljs_front_initial"
-
-                                               ;; simple compile (dev)
-                                               :optimizations :simple
-
-                                               ;; advanced compile (prod)
-                                               ;;:optimizations :advanced
-
-                                               ;;:source-map "app/prod/js/test.js.map"
-                                               :pretty-print true
-                                               :output-wrapper true}}
-                       :prod-front-authentication {:source-paths ["src_front/buddylistcljs_front_authentication/prod"]
                                             :incremental true
                                             :jar true
                                             :assert true
-                                            :compiler {:output-to "app/prod/js/front_authentication.js"
+                                            :compiler {:output-to "app/prod/js/front_initial.js"
                                                        :externs ["app/prod/js/externs_front.js"]
                                                        :warnings true
                                                        :elide-asserts true
@@ -287,7 +263,7 @@
 
                                                ;; no optimize compile (dev)
                                                ;;:optimizations :none
-                                                       :output-dir "app/prod/js/out_front/buddylistcljs_front_authentication"
+                                                       :output-dir "app/prod/js/out_front/buddylistcljs_front_initial"
 
                                                ;; simple compile (dev)
                                                        :optimizations :simple
@@ -298,75 +274,98 @@
                                                ;;:source-map "app/prod/js/test.js.map"
                                                        :pretty-print true
                                                        :output-wrapper true}}
-                      :prod-front-buddies {:source-paths ["src_front/buddylistcljs_front_buddies/prod"]
-                                                  :incremental true
-                                                  :jar true
-                                                  :assert true
-                                                  :compiler {:output-to "app/prod/js/front_buddies.js"
-                                                             :externs ["app/prod/js/externs_front.js"]
-                                                             :warnings true
-                                                             :elide-asserts true
+                       :prod-front-authentication {:source-paths ["src_front/buddylistcljs_front_authentication/prod"]
+                                                   :incremental true
+                                                   :jar true
+                                                   :assert true
+                                                   :compiler {:output-to "app/prod/js/front_authentication.js"
+                                                              :externs ["app/prod/js/externs_front.js"]
+                                                              :warnings true
+                                                              :elide-asserts true
                                                ;; :target :nodejs
 
                                                ;; no optimize compile (dev)
                                                ;;:optimizations :none
-                                                             :output-dir "app/prod/js/out_front/buddylistcljs_front_buddies"
+                                                              :output-dir "app/prod/js/out_front/buddylistcljs_front_authentication"
 
                                                ;; simple compile (dev)
-                                                             :optimizations :simple
+                                                              :optimizations :simple
 
                                                ;; advanced compile (prod)
                                                ;;:optimizations :advanced
 
                                                ;;:source-map "app/prod/js/test.js.map"
-                                                             :pretty-print true
-                                                             :output-wrapper true}}
-                      :prod-front-chat {:source-paths ["src_front/buddylistcljs_front_chat/prod"]
-                                           :incremental true
-                                           :jar true
-                                           :assert true
-                                           :compiler {:output-to "app/prod/js/front_chat.js"
-                                                      :externs ["app/prod/js/externs_front.js"]
-                                                      :warnings true
-                                                      :elide-asserts true
+                                                              :pretty-print true
+                                                              :output-wrapper true}}
+                       :prod-front-buddies {:source-paths ["src_front/buddylistcljs_front_buddies/prod"]
+                                            :incremental true
+                                            :jar true
+                                            :assert true
+                                            :compiler {:output-to "app/prod/js/front_buddies.js"
+                                                       :externs ["app/prod/js/externs_front.js"]
+                                                       :warnings true
+                                                       :elide-asserts true
                                                ;; :target :nodejs
 
                                                ;; no optimize compile (dev)
                                                ;;:optimizations :none
-                                                      :output-dir "app/prod/js/out_front/buddylistcljs_front_chat"
+                                                       :output-dir "app/prod/js/out_front/buddylistcljs_front_buddies"
 
                                                ;; simple compile (dev)
-                                                      :optimizations :simple
+                                                       :optimizations :simple
 
                                                ;; advanced compile (prod)
                                                ;;:optimizations :advanced
 
                                                ;;:source-map "app/prod/js/test.js.map"
-                                                      :pretty-print true
-                                                      :output-wrapper true}}
-                      :prod-front-addbuddy {:source-paths ["src_front/buddylistcljs_front_addbuddy/prod"]
-                                        :incremental true
-                                        :jar true
-                                        :assert true
-                                        :compiler {:output-to "app/prod/js/front_addbuddy.js"
-                                                   :externs ["app/prod/js/externs_front.js"]
-                                                   :warnings true
-                                                   :elide-asserts true
+                                                       :pretty-print true
+                                                       :output-wrapper true}}
+                       :prod-front-chat {:source-paths ["src_front/buddylistcljs_front_chat/prod"]
+                                         :incremental true
+                                         :jar true
+                                         :assert true
+                                         :compiler {:output-to "app/prod/js/front_chat.js"
+                                                    :externs ["app/prod/js/externs_front.js"]
+                                                    :warnings true
+                                                    :elide-asserts true
                                                ;; :target :nodejs
 
                                                ;; no optimize compile (dev)
                                                ;;:optimizations :none
-                                                   :output-dir "app/prod/js/out_front/buddylistcljs_front_addbuddy"
+                                                    :output-dir "app/prod/js/out_front/buddylistcljs_front_chat"
 
                                                ;; simple compile (dev)
-                                                   :optimizations :simple
+                                                    :optimizations :simple
 
                                                ;; advanced compile (prod)
                                                ;;:optimizations :advanced
 
                                                ;;:source-map "app/prod/js/test.js.map"
-                                                   :pretty-print true
-                                                   :output-wrapper true}}}}
+                                                    :pretty-print true
+                                                    :output-wrapper true}}
+                       :prod-front-addbuddy {:source-paths ["src_front/buddylistcljs_front_addbuddy/prod"]
+                                             :incremental true
+                                             :jar true
+                                             :assert true
+                                             :compiler {:output-to "app/prod/js/front_addbuddy.js"
+                                                        :externs ["app/prod/js/externs_front.js"]
+                                                        :warnings true
+                                                        :elide-asserts true
+                                               ;; :target :nodejs
+
+                                               ;; no optimize compile (dev)
+                                               ;;:optimizations :none
+                                                        :output-dir "app/prod/js/out_front/buddylistcljs_front_addbuddy"
+
+                                               ;; simple compile (dev)
+                                                        :optimizations :simple
+
+                                               ;; advanced compile (prod)
+                                               ;;:optimizations :advanced
+
+                                               ;;:source-map "app/prod/js/test.js.map"
+                                                        :pretty-print true
+                                                        :output-wrapper true}}}}
   :figwheel {:http-server-root "public"
              :ring-handler figwheel-middleware/app
              :server-port 3449})

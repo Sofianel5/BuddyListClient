@@ -30155,9 +30155,23 @@ buddylistcljs.user.none_nil.cljs$lang$maxFixedArity = 0;
 buddylistcljs.user.none_nil.cljs$lang$applyTo = function(a) {
   return this.cljs$core$IFn$_invoke$arity$variadic(cljs.core.seq.call(null, a));
 };
+buddylistcljs.user.path = cljs.nodejs.require.call(null, "path");
 buddylistcljs.user.axios = cljs.nodejs.require.call(null, "axios");
 buddylistcljs.user.local_storage = cljs.nodejs.require.call(null, "node-localstorage").LocalStorage;
-buddylistcljs.user.store = new buddylistcljs.user.local_storage("./storage");
+buddylistcljs.user.get_prod_folder = function() {
+  var a = cljs.nodejs.process.platform;
+  switch(a) {
+    case "darwin":
+      return buddylistcljs.user.path.join(cljs.nodejs.process.env.HOME, "Library", "Application Support", "BuddyList");
+    case "win32":
+      return buddylistcljs.user.path.join(cljs.nodejs.process.env.APPDATA, "BuddyList");
+    case "linux":
+      return buddylistcljs.user.path.join(cljs.nodejs.process.env.HOME, ".BuddyList");
+    default:
+      throw Error(["No matching clause: ", cljs.core.str.cljs$core$IFn$_invoke$arity$1(a)].join(""));
+  }
+};
+buddylistcljs.user.store = new buddylistcljs.user.local_storage(buddylistcljs.user.get_prod_folder.call(null));
 buddylistcljs.user.user_key = "user";
 buddylistcljs.user.buddies_key = "buddies";
 buddylistcljs.user.get_cached_user = function() {
@@ -30241,12 +30255,34 @@ buddylistcljs.core.path = cljs.nodejs.require.call(null, "path");
 buddylistcljs.core.client = cljs.nodejs.require.call(null, "faye-websocket").Client;
 buddylistcljs.core.Electron = cljs.nodejs.require.call(null, "electron");
 buddylistcljs.core.BrowserWindow = buddylistcljs.core.Electron.BrowserWindow;
+buddylistcljs.core.Menu = buddylistcljs.core.Electron.Menu;
 buddylistcljs.core.ipc_main = buddylistcljs.core.Electron.ipcMain;
 buddylistcljs.core.crash_reporter = buddylistcljs.core.Electron.crashReporter;
 buddylistcljs.core.Os = cljs.nodejs.require.call(null, "os");
 buddylistcljs.core._STAR_win_STAR_ = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
 buddylistcljs.core._STAR_user_STAR_ = cljs.core.atom.call(null, cljs.core.PersistentArrayMap.EMPTY);
 buddylistcljs.core.app = buddylistcljs.core.Electron.app;
+cljs.core.truth_(buddylistcljs.core.app.isPackaged) ? cljs.nodejs.process.env.NODE_ENV = "production" : cljs.core.println.call(null, cljs.nodejs.process.env.NODE_ENV);
+buddylistcljs.core.application_menu_template = new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "label", "label", 1718410804), "File", new cljs.core.Keyword(null, "submenu", "submenu", 2142563344), new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Close Window"], 
+null)], null)], null), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Edit", new cljs.core.Keyword(null, "submenu", "submenu", 2142563344), new cljs.core.PersistentVector(null, 6, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Undo", new cljs.core.Keyword(null, "accelerator", "accelerator", 1975205785), "CmdOrCtrl+Z", new cljs.core.Keyword(null, 
+"selector", "selector", 762528866), "undo:"], null), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Redo", new cljs.core.Keyword(null, "accelerator", "accelerator", 1975205785), "Shift+CmdOrCtrl+Z", new cljs.core.Keyword(null, "selector", "selector", 762528866), "redo:"], null), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Cut", new cljs.core.Keyword(null, "accelerator", "accelerator", 
+1975205785), "CmdOrCtrl+X", new cljs.core.Keyword(null, "selector", "selector", 762528866), "cut:"], null), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Copy", new cljs.core.Keyword(null, "accelerator", "accelerator", 1975205785), "CmdOrCtrl+C", new cljs.core.Keyword(null, "selector", "selector", 762528866), "copy:"], null), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Paste", new cljs.core.Keyword(null, 
+"accelerator", "accelerator", 1975205785), "CmdOrCtrl+V", new cljs.core.Keyword(null, "selector", "selector", 762528866), "paste:"], null), new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Select All", new cljs.core.Keyword(null, "accelerator", "accelerator", 1975205785), "CmdOrCtrl+A", new cljs.core.Keyword(null, "selector", "selector", 762528866), "selectAll:"], null)], null)], null), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, 
+"label", "label", 1718410804), "Buddies", new cljs.core.Keyword(null, "submenu", "submenu", 2142563344), new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Add Buddy", new cljs.core.Keyword(null, "click", "click", 1912301393), function() {
+  return cljs.core.println.call(null, "Add buddy");
+}], null), new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Remove Buddy", new cljs.core.Keyword(null, "click", "click", 1912301393), function() {
+  return cljs.core.println.call(null, "remove buddy");
+}], null)], null)], null)], null);
+cljs.core._EQ_.call(null, cljs.nodejs.process.platform, "darwin") && (buddylistcljs.core.application_menu_template = cljs.core.into.call(null, new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "label", "label", 1718410804), "BuddyList", new cljs.core.Keyword(null, "submenu", "submenu", 2142563344), new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 
+3, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Quit", new cljs.core.Keyword(null, "accelerator", "accelerator", 1975205785), cljs.core._EQ_.call(null, cljs.nodejs.process.platform, "darwin") ? "Command+Q" : "Ctrl+Q", new cljs.core.Keyword(null, "click", "click", 1912301393), function() {
+  return buddylistcljs.core.app.quit();
+}], null)], null)], null)], null), buddylistcljs.core.application_menu_template));
+cljs.core.not_EQ_.call(null, cljs.nodejs.process.env.NODE_ENV, "production") && (buddylistcljs.core.application_menu_template = cljs.core.conj.call(null, buddylistcljs.core.application_menu_template, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Developer Tools", new cljs.core.Keyword(null, "submenu", "submenu", 2142563344), new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 
+3, [new cljs.core.Keyword(null, "label", "label", 1718410804), "Toggle DevTools", new cljs.core.Keyword(null, "click", "click", 1912301393), function(a, b) {
+  return b.toggleDevTools();
+}, new cljs.core.Keyword(null, "accelerator", "accelerator", 1975205785), cljs.core._EQ_.call(null, cljs.nodejs.process.platform, "darwin") ? "Command+I" : "Ctrl+I"], null)], null)], null)));
+buddylistcljs.core.application_menu_template = cljs.core.clj__GT_js.call(null, buddylistcljs.core.application_menu_template);
+cljs.core.println.call(null, JSON.stringify(buddylistcljs.core.application_menu_template));
 buddylistcljs.core.on_buddy_message = function(a) {
   cljs.core.println.call(null, "Message: ", a.data);
   if (cljs.core.not_EQ_.call(null, cljs.core.first.call(null, a.data), "{")) {
@@ -30372,14 +30408,14 @@ buddylistcljs.core.launch_unauth_flow = function() {
   });
 };
 buddylistcljs.core._main = function() {
-  buddylistcljs.core.crash_reporter.start(cljs.core.clj__GT_js.call(null, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "companyName", "companyName", 2030952346), "BuddyList", new cljs.core.Keyword(null, "submitURL", "submitURL", -169159433), "http://buddylistapp.com"], null)));
+  buddylistcljs.core.crash_reporter.start(cljs.core.clj__GT_js.call(null, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "companyName", "companyName", 2030952346), "BuddyList", new cljs.core.Keyword(null, "submitURL", "submitURL", -169159433), "http://buddylist.io"], null)));
   cljs.nodejs.process.on("error", function(a) {
     return console.log(a);
   });
   buddylistcljs.core.app.on("window-all-closed", function() {
     return cljs.core.not_EQ_.call(null, cljs.nodejs.process.platform, "darwin") ? buddylistcljs.core.app.quit() : null;
   });
-  return buddylistcljs.core.app.on("ready", function() {
+  buddylistcljs.core.app.on("ready", function() {
     cljs.core.swap_BANG_.call(null, buddylistcljs.core._STAR_win_STAR_, cljs.core.assoc, new cljs.core.Keyword(null, "loading", "loading", -737050189), new buddylistcljs.core.BrowserWindow(cljs.core.clj__GT_js.call(null, new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null, "width", "width", -384071477), 800, new cljs.core.Keyword(null, "height", "height", 1025178622), 600], null))));
     (new cljs.core.Keyword(null, "loading", "loading", -737050189)).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null, buddylistcljs.core._STAR_win_STAR_)).loadURL(["file://", cljs.core.str.cljs$core$IFn$_invoke$arity$1(buddylistcljs.core.path.resolve(__dirname, "../index.html"))].join(""));
     var a = buddylistcljs.user.get_user.call(null);
@@ -30389,6 +30425,7 @@ buddylistcljs.core._main = function() {
       };
     }(a, a)) : buddylistcljs.core.launch_unauth_flow.call(null);
   });
+  return buddylistcljs.core.Menu.setApplicationMenu(buddylistcljs.core.Menu.buildFromTemplate(buddylistcljs.core.application_menu_template));
 };
 cljs.nodejs.enable_util_print_BANG_.call(null);
 console.log(["Start descjop application on ", cljs.core.str.cljs$core$IFn$_invoke$arity$1(buddylistcljs.core.Os.type()), "."].join(""));

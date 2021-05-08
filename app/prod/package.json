@@ -1,5 +1,27 @@
 {
-  "name": "buddylistcljs",
-  "version": "0.1.0",
-  "main": "js/main.js"
+    "name": "buddylistcljs",
+    "version": "0.0.0",
+    "description": "",
+    "main": "js/main.js",
+    "devDependencies": {
+        "babel-plugin-transform-object-rest-spread": "^6.26.0",
+        "closurecompiler-externs": "^1.0.4",
+        "electron-packager": "^8.5.1",
+        "grunt": "^1.0.1",
+        "grunt-download-electron": "^2.1.4",
+        "schema-utils": "2.6.6"
+    },
+    "license": "MIT",
+    "repository": "https://github.com/Sofianel5/BuddyListClient",
+    "dependencies": {
+        "axios": "^0.21.1",
+        "bufferutil": "^4.0.3",
+        "coffeescript": "^2.5.1",
+        "faye-websocket": "^0.11.3",
+        "node-localstorage": "^2.1.6",
+        "node-window-manager": "^2.2.4",
+        "query-string": "^7.0.0",
+        "schema-utils": "2.6.6",
+        "utf-8-validate": "^5.0.4"
+    }
 }

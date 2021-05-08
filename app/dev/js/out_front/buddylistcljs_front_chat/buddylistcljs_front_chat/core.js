@@ -237,9 +237,15 @@ cljs.core.println.call(null,message);
 var parsed = JSON.parse(message);
 var messages = cljs.core.js__GT_clj.call(null,parsed,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true);
 if(cljs.core._EQ_.call(null,cljs.core.empty.call(null,messages),cljs.core.PersistentVector.EMPTY)){
-return cljs.core.swap_BANG_.call(null,buddylistcljs_front_chat.core.state,cljs.core.comp.call(null,cljs.core.vec,cljs.core.flatten,cljs.core.conj),messages);
+cljs.core.swap_BANG_.call(null,buddylistcljs_front_chat.core.state,cljs.core.comp.call(null,cljs.core.vec,cljs.core.flatten,cljs.core.conj),messages);
 } else {
-return cljs.core.swap_BANG_.call(null,buddylistcljs_front_chat.core.state,cljs.core.conj,messages);
+cljs.core.swap_BANG_.call(null,buddylistcljs_front_chat.core.state,cljs.core.conj,messages);
+}
+
+if(cljs.core._EQ_.call(null,cljs.core.last.call(null,messages),new cljs.core.Keyword(null,"with-user","with-user",1719589037).cljs$core$IFn$_invoke$arity$1(buddylistcljs_front_chat.core.data))){
+return (new Audio("../assets/imrcv.wav")).play();
+} else {
+return (new Audio("../assets/imsend.wav")).play();
 }
 }));
 buddylistcljs_front_chat.core.message_list = (function buddylistcljs_front_chat$core$message_list(messages){

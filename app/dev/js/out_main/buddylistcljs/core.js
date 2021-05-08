@@ -8,12 +8,37 @@ buddylistcljs.core.path = cljs.nodejs.require.call(null,"path");
 buddylistcljs.core.client = cljs.nodejs.require.call(null,"faye-websocket").Client;
 buddylistcljs.core.Electron = cljs.nodejs.require.call(null,"electron");
 buddylistcljs.core.BrowserWindow = buddylistcljs.core.Electron.BrowserWindow;
+buddylistcljs.core.Menu = buddylistcljs.core.Electron.Menu;
 buddylistcljs.core.ipc_main = buddylistcljs.core.Electron.ipcMain;
 buddylistcljs.core.crash_reporter = buddylistcljs.core.Electron.crashReporter;
 buddylistcljs.core.Os = cljs.nodejs.require.call(null,"os");
 buddylistcljs.core._STAR_win_STAR_ = cljs.core.atom.call(null,cljs.core.PersistentArrayMap.EMPTY);
 buddylistcljs.core._STAR_user_STAR_ = cljs.core.atom.call(null,cljs.core.PersistentArrayMap.EMPTY);
 buddylistcljs.core.app = buddylistcljs.core.Electron.app;
+if(cljs.core.truth_(buddylistcljs.core.app.isPackaged)){
+cljs.nodejs.process.env.NODE_ENV = "production";
+} else {
+cljs.core.println.call(null,cljs.nodejs.process.env.NODE_ENV);
+}
+buddylistcljs.core.application_menu_template = new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"label","label",1718410804),"File",new cljs.core.Keyword(null,"submenu","submenu",2142563344),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"label","label",1718410804),"Close Window"], null)], null)], null),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"label","label",1718410804),"Edit",new cljs.core.Keyword(null,"submenu","submenu",2142563344),new cljs.core.PersistentVector(null, 6, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"label","label",1718410804),"Undo",new cljs.core.Keyword(null,"accelerator","accelerator",1975205785),"CmdOrCtrl+Z",new cljs.core.Keyword(null,"selector","selector",762528866),"undo:"], null),new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"label","label",1718410804),"Redo",new cljs.core.Keyword(null,"accelerator","accelerator",1975205785),"Shift+CmdOrCtrl+Z",new cljs.core.Keyword(null,"selector","selector",762528866),"redo:"], null),new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"label","label",1718410804),"Cut",new cljs.core.Keyword(null,"accelerator","accelerator",1975205785),"CmdOrCtrl+X",new cljs.core.Keyword(null,"selector","selector",762528866),"cut:"], null),new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"label","label",1718410804),"Copy",new cljs.core.Keyword(null,"accelerator","accelerator",1975205785),"CmdOrCtrl+C",new cljs.core.Keyword(null,"selector","selector",762528866),"copy:"], null),new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"label","label",1718410804),"Paste",new cljs.core.Keyword(null,"accelerator","accelerator",1975205785),"CmdOrCtrl+V",new cljs.core.Keyword(null,"selector","selector",762528866),"paste:"], null),new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"label","label",1718410804),"Select All",new cljs.core.Keyword(null,"accelerator","accelerator",1975205785),"CmdOrCtrl+A",new cljs.core.Keyword(null,"selector","selector",762528866),"selectAll:"], null)], null)], null),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"label","label",1718410804),"Buddies",new cljs.core.Keyword(null,"submenu","submenu",2142563344),new cljs.core.PersistentVector(null, 2, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"label","label",1718410804),"Add Buddy",new cljs.core.Keyword(null,"click","click",1912301393),(function (){
+return cljs.core.println.call(null,"Add buddy");
+})], null),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"label","label",1718410804),"Remove Buddy",new cljs.core.Keyword(null,"click","click",1912301393),(function (){
+return cljs.core.println.call(null,"remove buddy");
+})], null)], null)], null)], null);
+if(cljs.core._EQ_.call(null,cljs.nodejs.process.platform,"darwin")){
+buddylistcljs.core.application_menu_template = cljs.core.into.call(null,new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"label","label",1718410804),"BuddyList",new cljs.core.Keyword(null,"submenu","submenu",2142563344),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"label","label",1718410804),"Quit",new cljs.core.Keyword(null,"accelerator","accelerator",1975205785),((cljs.core._EQ_.call(null,cljs.nodejs.process.platform,"darwin"))?"Command+Q":"Ctrl+Q"),new cljs.core.Keyword(null,"click","click",1912301393),(function (){
+return buddylistcljs.core.app.quit();
+})], null)], null)], null)], null),buddylistcljs.core.application_menu_template);
+} else {
+}
+if(cljs.core.not_EQ_.call(null,cljs.nodejs.process.env.NODE_ENV,"production")){
+buddylistcljs.core.application_menu_template = cljs.core.conj.call(null,buddylistcljs.core.application_menu_template,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"label","label",1718410804),"Developer Tools",new cljs.core.Keyword(null,"submenu","submenu",2142563344),new cljs.core.PersistentVector(null, 1, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.PersistentArrayMap(null, 3, [new cljs.core.Keyword(null,"label","label",1718410804),"Toggle DevTools",new cljs.core.Keyword(null,"click","click",1912301393),(function (p1__4157_SHARP_,p2__4156_SHARP_){
+return p2__4156_SHARP_.toggleDevTools();
+}),new cljs.core.Keyword(null,"accelerator","accelerator",1975205785),((cljs.core._EQ_.call(null,cljs.nodejs.process.platform,"darwin"))?"Command+I":"Ctrl+I")], null)], null)], null));
+} else {
+}
+buddylistcljs.core.application_menu_template = cljs.core.clj__GT_js.call(null,buddylistcljs.core.application_menu_template);
+cljs.core.println.call(null,JSON.stringify(buddylistcljs.core.application_menu_template));
 buddylistcljs.core.on_buddy_message = (function buddylistcljs$core$on_buddy_message(e){
 cljs.core.println.call(null,"Message: ",e.data);
 
@@ -45,14 +70,14 @@ new cljs.core.Keyword(null,"buddylist","buddylist",275565366).cljs$core$IFn$_inv
 
 var socket = (new buddylistcljs.core.client("ws://50.16.117.236:8000/buddies",null,cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"headers","headers",-835030129),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"authorization","authorization",-166302136),new cljs.core.Keyword(null,"auth-token","auth-token",30990976).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_user_STAR_)),new cljs.core.Keyword(null,"request-user","request-user",2052007844),new cljs.core.Keyword(null,"username","username",1605666410).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_user_STAR_))], null)], null))));
 socket.on("open",((function (socket){
-return (function (p1__4160_SHARP_){
-return cljs.core.println.call(null,"Opening connection",p1__4160_SHARP_);
+return (function (p1__4158_SHARP_){
+return cljs.core.println.call(null,"Opening connection",p1__4158_SHARP_);
 });})(socket))
 );
 
 socket.on("close",((function (socket){
-return (function (p1__4161_SHARP_){
-return cljs.core.println.call(null,"Closing connection",p1__4161_SHARP_);
+return (function (p1__4159_SHARP_){
+return cljs.core.println.call(null,"Closing connection",p1__4159_SHARP_);
 });})(socket))
 );
 
@@ -102,20 +127,20 @@ cljs.core.get.call(null,new cljs.core.Keyword(null,"chats","chats",518672204).cl
 cljs.core.get.call(null,new cljs.core.Keyword(null,"chats","chats",518672204).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)),with_user).webContents.on("did-finish-load",(function (){
 var socket = (new buddylistcljs.core.client(["ws://50.16.117.236:8000/chat?with-user=",cljs.core.str.cljs$core$IFn$_invoke$arity$1(with_user)].join(''),null,cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"headers","headers",-835030129),new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"authorization","authorization",-166302136),new cljs.core.Keyword(null,"auth-token","auth-token",30990976).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_user_STAR_)),new cljs.core.Keyword(null,"request-user","request-user",2052007844),new cljs.core.Keyword(null,"username","username",1605666410).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_user_STAR_))], null)], null))));
 socket.on("open",((function (socket){
-return (function (p1__4162_SHARP_){
-return cljs.core.println.call(null,"Opening connection",p1__4162_SHARP_);
+return (function (p1__4160_SHARP_){
+return cljs.core.println.call(null,"Opening connection",p1__4160_SHARP_);
 });})(socket))
 );
 
 socket.on("close",((function (socket){
-return (function (p1__4163_SHARP_){
-return cljs.core.println.call(null,"Closing connection",p1__4163_SHARP_);
+return (function (p1__4161_SHARP_){
+return cljs.core.println.call(null,"Closing connection",p1__4161_SHARP_);
 });})(socket))
 );
 
 socket.on("message",((function (socket){
-return (function (p1__4164_SHARP_){
-return buddylistcljs.core.on_message_recieved.call(null,with_user,p1__4164_SHARP_);
+return (function (p1__4162_SHARP_){
+return buddylistcljs.core.on_message_recieved.call(null,with_user,p1__4162_SHARP_);
 });})(socket))
 );
 
@@ -170,7 +195,7 @@ return cljs.core.swap_BANG_.call(null,buddylistcljs.core._STAR_win_STAR_,cljs.co
 }));
 });
 buddylistcljs.core._main = (function buddylistcljs$core$_main(){
-buddylistcljs.core.crash_reporter.start(cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"companyName","companyName",2030952346),"BuddyList",new cljs.core.Keyword(null,"submitURL","submitURL",-169159433),"http://buddylistapp.com"], null)));
+buddylistcljs.core.crash_reporter.start(cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"companyName","companyName",2030952346),"BuddyList",new cljs.core.Keyword(null,"submitURL","submitURL",-169159433),"http://buddylist.io"], null)));
 
 cljs.nodejs.process.on("error",(function (err){
 return console.log(err);
@@ -184,7 +209,7 @@ return null;
 }
 }));
 
-return buddylistcljs.core.app.on("ready",(function (){
+buddylistcljs.core.app.on("ready",(function (){
 cljs.core.swap_BANG_.call(null,buddylistcljs.core._STAR_win_STAR_,cljs.core.assoc,new cljs.core.Keyword(null,"loading","loading",-737050189),(new buddylistcljs.core.BrowserWindow(cljs.core.clj__GT_js.call(null,new cljs.core.PersistentArrayMap(null, 2, [new cljs.core.Keyword(null,"width","width",-384071477),(800),new cljs.core.Keyword(null,"height","height",1025178622),(600)], null)))));
 
 new cljs.core.Keyword(null,"loading","loading",-737050189).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)).loadURL(["file://",cljs.core.str.cljs$core$IFn$_invoke$arity$1(buddylistcljs.core.path.resolve(__dirname,"../index.html"))].join(''));
@@ -193,11 +218,11 @@ var temp__4655__auto__ = buddylistcljs.user.get_user.call(null);
 if(cljs.core.truth_(temp__4655__auto__)){
 var user = temp__4655__auto__;
 return user.then(((function (user,temp__4655__auto__){
-return (function (p1__4165_SHARP_){
-if(cljs.core.truth_(p1__4165_SHARP_)){
-cljs.core.println.call(null,"User:",p1__4165_SHARP_);
+return (function (p1__4163_SHARP_){
+if(cljs.core.truth_(p1__4163_SHARP_)){
+cljs.core.println.call(null,"User:",p1__4163_SHARP_);
 
-cljs.core.reset_BANG_.call(null,buddylistcljs.core._STAR_user_STAR_,p1__4165_SHARP_);
+cljs.core.reset_BANG_.call(null,buddylistcljs.core._STAR_user_STAR_,p1__4163_SHARP_);
 
 new cljs.core.Keyword(null,"loading","loading",-737050189).cljs$core$IFn$_invoke$arity$1(cljs.core.deref.call(null,buddylistcljs.core._STAR_win_STAR_)).close();
 
@@ -213,6 +238,8 @@ return buddylistcljs.core.launch_unauth_flow.call(null);
 return buddylistcljs.core.launch_unauth_flow.call(null);
 }
 }));
+
+return buddylistcljs.core.Menu.setApplicationMenu(buddylistcljs.core.Menu.buildFromTemplate(buddylistcljs.core.application_menu_template));
 });
 cljs.nodejs.enable_util_print_BANG_.call(null);
 console.log(["Start descjop application on ",cljs.core.str.cljs$core$IFn$_invoke$arity$1(buddylistcljs.core.Os.type()),"."].join(''));
