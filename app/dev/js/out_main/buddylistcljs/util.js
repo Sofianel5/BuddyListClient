@@ -12,3 +12,10 @@ return true;
 }
 }));
 });
+buddylistcljs.util.get_max_id = (function buddylistcljs$util$get_max_id(my_username,message){
+if(cljs.core.not_EQ_.call(null,my_username,new cljs.core.Keyword(null,"from","from",1815293044).cljs$core$IFn$_invoke$arity$1(message))){
+return new cljs.core.Keyword(null,"id","id",-1388402092).cljs$core$IFn$_invoke$arity$1(message);
+} else {
+return null;
+}
+});

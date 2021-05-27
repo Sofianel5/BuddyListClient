@@ -26,7 +26,7 @@
 
 (def EVENTS
   {:message-sent (fn [message]
-                   (.send ipc-renderer (str "chat:sent:" (:with-user data)) message))})
+                   (.send ipc-renderer "chat:sent" (:with-user data) message))})
 
 (go
   (while true
@@ -37,14 +37,15 @@
      (fn [_ message]
        (println message)
        (let [parsed (.parse js/JSON message)
-             messages (js->clj parsed :keywordize-keys true)]
-         (if (= (empty messages) [])
-           (swap! state (comp vec flatten conj) messages)
-           (swap! state conj messages))
-         ; Pretty sure I should use cond-> here
-         (if (= (-> messages last) (:with-user data))
-           (.play (js/Audio. "../assets/imrcv.wav"))
+             message (js->clj parsed :keywordize-keys true)]
+         (swap! state conj message)
+         (if (= (-> message :from) (:user data))
            (.play (js/Audio. "../assets/imsend.wav"))))))
+
+(.on ipc-renderer "chat:loaded-history"
+     (fn [_ parsed]
+       (let [messages (js->clj parsed :keywordize-keys true)]
+         (swap! state (comp vec flatten conj) messages))))
 
 (defn message-list [messages]
   [:ul {:class "message-list"}
@@ -57,7 +58,7 @@
   (.preventDefault event)
   (let [message (-> js/document (.getElementById "chat-input") .-value)]
     (js/console.log message)
-    (.send ipc-renderer (str "chat:sent:" (:with-user data)) message)
+    (.send ipc-renderer "chat:sent" (:with-user data) message)
     (set! (-> js/document (.getElementById "chat-input") .-value) "")))
 
 (defn chat-input []

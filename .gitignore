@@ -18,3 +18,4 @@ electron/*
 .vscode/
 storage/
 BuddyList-darwin-x64/
+node_modules

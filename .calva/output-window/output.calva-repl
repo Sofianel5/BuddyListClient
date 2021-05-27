@@ -4,8 +4,7 @@
 ; Please see https://calva.io/output/ for more info.
 ; Happy coding! ♥️
 
-; Jacking in...
-; Starting Jack-in Terminal: lein update-in :dependencies conj '[nrepl,"0.8.3"]' -- update-in :dependencies conj '[cider/piggieback,"0.5.2"]' -- update-in :plugins conj '[cider/cider-nrepl,"0.25.11"]' -- update-in '[:repl-options,:nrepl-middleware]' conj '["cider.nrepl/cider-middleware"]' -- update-in '[:repl-options,:nrepl-middleware]' conj '["cider.piggieback/wrap-cljs-repl"]' -- repl :headless
+; Connecting ...
 ; Hooking up nREPL sessions...
 ; Connected session: clj
 ; TIPS: 
@@ -15,40 +14,11 @@
 ;   - `alt+up` and `alt+down` traverse up and down the REPL command history
 ;      when the cursor is after the last contents at the prompt
 ;   - Clojure lines in stack traces are peekable and clickable.
+clj꞉user꞉>  ; Use `alt+enter` to evaluate
+(+ 1 1)
+2
 clj꞉user꞉> 
-; Creating cljs repl session...
-; Connecting cljs repl: Leiningen + ClojureScript built-in for node...
-;   The Calva Connection Log might have more connection progress information.
-; Connected session: cljs
-; TIPS: You can choose which REPL to use (clj or cljs):
-;    *Calva: Toggle REPL connection*
-;    (There is a button in the status bar for this)
-; Jack-in done.
-cljs꞉cljs.user꞉> 
-true
-cljs꞉buddylistcljs.user꞉> 
-#'buddylistcljs.user/none-nil
-
-cljs꞉buddylistcljs.user꞉> 
-#'buddylistcljs.user/axios
-
-cljs꞉buddylistcljs.user꞉> 
-#'buddylistcljs.user/sign-up
-
-cljs꞉buddylistcljs.user꞉> 
-nil
-cljs꞉buddylistcljs.user꞉> 
-#object[Promise [object Promise]]
-cljs꞉buddylistcljs.user꞉> 
-#'buddylistcljs.core/sign-up
-
-; WARNING: Use of undeclared Var buddylistcljs.core/none-nil at line 2 <cljs repl>
-; WARNING: Use of undeclared Var buddylistcljs.core/axios at line 5 <cljs repl>
-cljs꞉buddylistcljs.core꞉> 
-nil
-cljs꞉buddylistcljs.user꞉> 
-#'buddylistcljs-front.core/init!
-
-; WARNING: Use of undeclared Var buddylistcljs-front.core/mount-root at line 2 <cljs repl>
-cljs꞉buddylistcljs-front.core꞉> 
-; nREPL Connection was closed
+; CompilerException java.lang.RuntimeException: Unable to resolve symbol: Electron in this context, compiling:(/Users/sofiane/Documents/buddylistcljs.nosync/.calva/output-window/output.calva-repl:21:11) 
+clj꞉user꞉> 
+; CompilerException java.lang.RuntimeException: Unable to resolve symbol: Electron in this context, compiling:(/Users/sofiane/Documents/buddylistcljs.nosync/.calva/output-window/output.calva-repl:21:11) 
+clj꞉user꞉> 

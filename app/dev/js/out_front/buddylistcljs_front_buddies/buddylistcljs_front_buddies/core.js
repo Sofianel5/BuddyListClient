@@ -245,7 +245,9 @@ return iter__4290__auto__.call(null,buddies);
 buddylistcljs_front_buddies.core.on_new_status_submit = (function buddylistcljs_front_buddies$core$on_new_status_submit(e,event_channel){
 e.preventDefault();
 
-return buddylistcljs_front_buddies.core.ipc_renderer.send("buddies:new-status",document.getElementById("new-status-input").value);
+buddylistcljs_front_buddies.core.ipc_renderer.send("buddies:new-status",document.getElementById("new-status-input").value);
+
+return document.getElementById("new-status-input").value = "";
 });
 buddylistcljs_front_buddies.core.status_update = (function buddylistcljs_front_buddies$core$status_update(event_channel){
 return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"div","div",1057191632),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),"status-updater"], null),new cljs.core.PersistentVector(null, 4, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"form","form",-1624062471),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"on-submit","on-submit",1227871159),(function (p1__2171_SHARP_){

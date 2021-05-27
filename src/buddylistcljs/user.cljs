@@ -1,7 +1,5 @@
 (ns buddylistcljs.user
-  (:require-macros [cljs.core.async.macros :refer [go]])
-  (:require [cljs.nodejs :as nodejs]
-            [cljs.core.async :refer [<!]]))
+  (:require [cljs.nodejs :as nodejs]))
 
 (defn none-nil
   "returns true if none of the items provided are nill"
@@ -26,6 +24,9 @@
 
 (def buddies-key "buddies")
 
+(defn chat-key [with-user]
+  (str "chat-" with-user))
+
 (defn get-cached-user []
   (if-let [encoded-user (.getItem store user-key)]
     (js->clj (.parse js/JSON encoded-user) :keywordize-keys true)))
@@ -47,13 +48,18 @@
 (defn cache-buddies-str [buddies-str]
   (cache-string buddies-str buddies-key))
 
-(defn get-cached-buddies-str []
-  (.getItem store buddies-key))
+(defn update-messages-count [with-user new-count]
+  (.setItem store (chat-key with-user) (str new-count)))
+
+(defn get-message-count [with-user]
+  (if-let [count-str (.getItem store (chat-key with-user))]
+    (js/parseInt count-str)
+    nil))
 
 (defn log-in [username password]
   (if (none-nil username password)
     (let [params {:username username :password password}
-          options (clj->js {:method "POST" :url "http://50.16.117.236:8000/login" :params params})
+          options (clj->js {:method "POST" :url "https://buddylist.app/login" :params params})
           request (axios options)]
       (.then request #(-> % (js->clj :keywordize-keys true) :data cache-user)))))
 
@@ -61,8 +67,8 @@
 
 (defn sign-up [username phone password]
   (if (none-nil username password phone)
-    (let [params {:username username :password password :phone phone}
-          options (clj->js {:method "POST" :url "http://50.16.117.236:8000/signup" :params params})
+    (let [params {:username username :cleartext-password password :phone phone}
+          options (clj->js {:method "POST" :url "https://buddylist.app/signup" :params params})
           request (axios options)]
       (.then request #(-> % (js->clj :keywordize-keys true) :data cache-user)))))
 
@@ -70,7 +76,7 @@
 
 (defn update-user [username auth-token]
   (let [headers {:authorization auth-token :request-user username}
-        options (clj->js {:method "POST" :url "http://50.16.117.236:8000/user" :headers headers})
+        options (clj->js {:method "POST" :url "https://buddylist.app/user" :headers headers})
         request (axios options)]
     (-> request
         (.then #(-> % (js->clj :keywordize-keys true) :data))
@@ -84,8 +90,17 @@
 (defn add-buddy [username auth-token new-buddy]
   (let [headers {:authorization auth-token :request-user username}
         params {:new-buddy new-buddy}
-        options (clj->js {:method "POST" :url "http://50.16.117.236:8000/add-buddy" :headers headers :params params})
+        options (clj->js {:method "POST" :url "https://buddylist.app/add-buddy" :headers headers :params params})
         request (axios options)]
     (-> request
         (.then #(-> % (js->clj :keywordize-keys true) :data))
         (.catch #(identity nil)))))
+
+(defn get-chat-history [username auth-token buddy start offset]
+  (let [headers {:authorization auth-token :request-user username}
+        params {:start start :offset offset :buddy buddy}
+        options (clj->js {:method "GET" :url "https://buddylist.app/chat-history" :headers headers :params params})
+        request (axios options)]
+    (-> request
+        (.then #(.-data %))
+        (.catch #(println %)))))

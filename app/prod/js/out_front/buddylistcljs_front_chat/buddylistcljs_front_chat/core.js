@@ -75,7 +75,7 @@ buddylistcljs_front_chat.core.state = reagent.core.atom.call(null,cljs.core.Pers
 }
 buddylistcljs_front_chat.core.EVENTCHANNEL = cljs.core.async.chan.call(null);
 buddylistcljs_front_chat.core.EVENTS = new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"message-sent","message-sent",1107637548),(function (message){
-return buddylistcljs_front_chat.core.ipc_renderer.send(["chat:sent:",cljs.core.str.cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"with-user","with-user",1719589037).cljs$core$IFn$_invoke$arity$1(buddylistcljs_front_chat.core.data))].join(''),message);
+return buddylistcljs_front_chat.core.ipc_renderer.send("chat:sent",new cljs.core.Keyword(null,"with-user","with-user",1719589037).cljs$core$IFn$_invoke$arity$1(buddylistcljs_front_chat.core.data),message);
 })], null);
 var c__2950__auto___4471 = cljs.core.async.chan.call(null,(1));
 cljs.core.async.impl.dispatch.run.call(null,((function (c__2950__auto___4471){
@@ -235,18 +235,18 @@ buddylistcljs_front_chat.core.ipc_renderer.on("chat:received",(function (_,messa
 cljs.core.println.call(null,message);
 
 var parsed = JSON.parse(message);
-var messages = cljs.core.js__GT_clj.call(null,parsed,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true);
-if(cljs.core._EQ_.call(null,cljs.core.empty.call(null,messages),cljs.core.PersistentVector.EMPTY)){
-cljs.core.swap_BANG_.call(null,buddylistcljs_front_chat.core.state,cljs.core.comp.call(null,cljs.core.vec,cljs.core.flatten,cljs.core.conj),messages);
-} else {
-cljs.core.swap_BANG_.call(null,buddylistcljs_front_chat.core.state,cljs.core.conj,messages);
-}
+var message__$1 = cljs.core.js__GT_clj.call(null,parsed,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true);
+cljs.core.swap_BANG_.call(null,buddylistcljs_front_chat.core.state,cljs.core.conj,message__$1);
 
-if(cljs.core._EQ_.call(null,cljs.core.last.call(null,messages),new cljs.core.Keyword(null,"with-user","with-user",1719589037).cljs$core$IFn$_invoke$arity$1(buddylistcljs_front_chat.core.data))){
-return (new Audio("../assets/imrcv.wav")).play();
-} else {
+if(cljs.core._EQ_.call(null,new cljs.core.Keyword(null,"from","from",1815293044).cljs$core$IFn$_invoke$arity$1(message__$1),new cljs.core.Keyword(null,"user","user",1532431356).cljs$core$IFn$_invoke$arity$1(buddylistcljs_front_chat.core.data))){
 return (new Audio("../assets/imsend.wav")).play();
+} else {
+return null;
 }
+}));
+buddylistcljs_front_chat.core.ipc_renderer.on("chat:loaded-history",(function (_,parsed){
+var messages = cljs.core.js__GT_clj.call(null,parsed,new cljs.core.Keyword(null,"keywordize-keys","keywordize-keys",1310784252),true);
+return cljs.core.swap_BANG_.call(null,buddylistcljs_front_chat.core.state,cljs.core.comp.call(null,cljs.core.vec,cljs.core.flatten,cljs.core.conj),messages);
 }));
 buddylistcljs_front_chat.core.message_list = (function buddylistcljs_front_chat$core$message_list(messages){
 return new cljs.core.PersistentVector(null, 3, 5, cljs.core.PersistentVector.EMPTY_NODE, [new cljs.core.Keyword(null,"ul","ul",-1349521403),new cljs.core.PersistentArrayMap(null, 1, [new cljs.core.Keyword(null,"class","class",-2030961996),"message-list"], null),(function (){var iter__4290__auto__ = (function buddylistcljs_front_chat$core$message_list_$_iter__4479(s__4480){
@@ -299,7 +299,7 @@ event.preventDefault();
 var message = document.getElementById("chat-input").value;
 console.log(message);
 
-buddylistcljs_front_chat.core.ipc_renderer.send(["chat:sent:",cljs.core.str.cljs$core$IFn$_invoke$arity$1(new cljs.core.Keyword(null,"with-user","with-user",1719589037).cljs$core$IFn$_invoke$arity$1(buddylistcljs_front_chat.core.data))].join(''),message);
+buddylistcljs_front_chat.core.ipc_renderer.send("chat:sent",new cljs.core.Keyword(null,"with-user","with-user",1719589037).cljs$core$IFn$_invoke$arity$1(buddylistcljs_front_chat.core.data),message);
 
 return document.getElementById("chat-input").value = "";
 });

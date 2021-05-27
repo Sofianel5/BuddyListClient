@@ -5,3 +5,8 @@
 
 (defn network-connected? []
   (.resolve dns "www.google.com" (fn [err] (if err false true))))
+
+(defn get-max-id [my-username message]
+  (if (not= my-username (:from message))
+    (:id message)
+    nil))
