@@ -1,14 +1,11 @@
 (ns buddylistcljs-front-authentication.core
   (:require  [reagent.core :as reagent :refer [atom]]
-             [cljs.nodejs :as nodejs]))
+             [cljs.nodejs :as nodejs]
+             ["react-phone-number-input" :refer [PhoneInput]]))
 
 (def Electron (nodejs/require "electron"))
 
 (def ipc-renderer (.-ipcRenderer Electron))
-
-(def phone-input (-> "react-phone-number-input" 
-                           nodejs/require
-                           .-PhoneInput))
 
 (defonce state (atom {:type :login
                       :message "Loaded"}))
@@ -35,7 +32,7 @@
 (defn signup-form []
   [:form {:on-submit #(submit-signup-form %)}
    [:input {:type :text :name :username :id :username :placeholder :username}]
-   [phone-input {:country "US" :value "+12133734253" :onchange #(println %)}]
+   [:> PhoneInput {:country "US" :value "+12133734253" :onchange #(println %)}]
    [:input {:type :text :name :phone :id :phone :placeholder :phone}]
    [:input {:type :password :name :password :id :password :placeholder :password}]
    [:input {:type :submit}]])
