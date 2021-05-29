@@ -13,9 +13,14 @@ node_modules/*
 *.ipr
 *.iws
 electron/*
-.calva/
+/.calva/
 .cljs_node_repl/
 .vscode/
 storage/
 BuddyList-darwin-x64/
 node_modules
+.shadow-cljs/
+.nrepl-port
+resources/public/js
+resources/main.js
+/.lsp/

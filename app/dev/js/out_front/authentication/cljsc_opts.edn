@@ -1,1 +1,0 @@
-{:output-wrapper true, :output-dir "app/dev/js/out_front/authentication", :externs ["app/dev/js/externs_front.js" "closure-js/externs"], :elide-asserts true, :optimizations :none, :warnings true, :output-to "app/dev/js/front_authentication.js", :libs ["closure-js/libs"], :pretty-print true}

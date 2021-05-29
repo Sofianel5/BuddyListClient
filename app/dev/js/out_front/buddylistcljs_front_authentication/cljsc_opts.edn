@@ -1,1 +1,0 @@
-{:output-to "app/dev/js/front_authentication.js", :externs ["app/dev/js/externs_front.js"], :warnings true, :elide-asserts true, :optimizations :none, :output-dir "app/dev/js/out_front/buddylistcljs_front_authentication", :pretty-print true, :output-wrapper true}

@@ -1,14 +1,21 @@
 {
-    "name": "buddylistcljs",
-    "version": "0.0.0",
-    "description": "",
+    "name": "buddylistclient",
+    "version": "1.0.0",
+    "main": "resources/main.js",
+    "scripts": {
+        "dev": "shadow-cljs watch main authentication add-buddy buddies chat",
+        "build": "shadow-cljs compile main authentication add-buddy buddies chat",
+        "clean": "rm -rf resources/public/js/* && rm -rf target"
+    },
     "devDependencies": {
         "babel-plugin-transform-object-rest-spread": "^6.26.0",
         "closurecompiler-externs": "^1.0.4",
+        "electron": "^12.0.6",
         "electron-packager": "^8.5.1",
         "grunt": "^1.0.1",
         "grunt-download-electron": "^2.1.4",
-        "schema-utils": "2.6.6"
+        "schema-utils": "2.6.6",
+        "shadow-cljs": "^2.8.110"
     },
     "license": "MIT",
     "repository": "https://github.com/Sofianel5/BuddyListClient",
@@ -20,6 +27,8 @@
         "node-localstorage": "^2.1.6",
         "node-window-manager": "^2.2.4",
         "query-string": "^7.0.0",
+        "react": "16.13.0",
+        "react-dom": "16.13.0",
         "react-phone-number-input": "^3.1.22",
         "schema-utils": "2.6.6",
         "sound-play": "^1.1.0",
