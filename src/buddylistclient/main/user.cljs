@@ -62,9 +62,9 @@
 
 (comment (.then (log-in "sofiane" "password") #(println (str "printing: " %))))
 
-(defn sign-up [username phone password]
+(defn sign-up [first-name last-name email phone username password]
   (if (none-nil username password phone)
-    (let [params {:username username :cleartext-password password :phone phone}
+    (let [params {:username username :cleartext-password password :phone phone :first-name first-name :last-name last-name :email email}
           options (clj->js {:method "POST" :url "https://buddylist.app/signup" :params params})
           request (axios options)]
       (.then request #(-> % (js->clj :keywordize-keys true) :data cache-user)))))

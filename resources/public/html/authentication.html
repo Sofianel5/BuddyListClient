@@ -1,16 +1,72 @@
 <!DOCTYPE html>
-<html>
+<html style="-webkit-app-region: drag">
 
 <head>
     <meta charset="UTF-8">
     <title>BuddyList</title>
+    <script>
+        if (typeof module === 'object') {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
+    <style>
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            /* If you want dots under the hoverable text */
+        }
+        /* Tooltip text */
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #FFFAFF;
+            color: #050401;
+            text-align: center;
+            padding: 5px 0;
+            border-radius: 6px;
+            /* Position the tooltip text - see examples below! */
+            position: absolute;
+            z-index: 1;
+        }
+        /* Show the tooltip text when you mouse over the tooltip container */
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+        }
+        
+        .tooltip .tooltiptext {
+            width: 200px;
+            top: 100%;
+            left: 50%;
+            margin-left: -100px;
+            /* Use half of the width (120/2 = 60), to center the tooltip */
+        }
+        
+        .tooltip .tooltiptext::after {
+            content: " ";
+            position: absolute;
+            bottom: 100%;
+            /* At the top of the tooltip */
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: transparent transparent #FFFAFF transparent;
+        }
+    </style>
     <link rel="stylesheet" href="../css/react-phone-number-input/style.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <script src="../js/jquery.js"></script>
+    <script src="../js/bootstrap.js"></script>
 </head>
 
-<body>
-    <div id="app-container">
-    </div>
+<body id="app-container" style="background-color: #303036;">
 </body>
 <script src="../js/authentication/authentication.js"></script>
+<script>
+    if (window.module) module = window.module;
+</script>
 
 </html>

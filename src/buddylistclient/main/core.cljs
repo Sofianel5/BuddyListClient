@@ -107,11 +107,16 @@
                                                 (launch-buddylist)))))
 
 (.on ipcMain "signup"
-     (fn [_ username phone password]
-       (.then (user/sign-up username phone password) (fn [user]
-                                                       (reset! *user* user)
-                                                       (-> @*win* :authentication .close)
-                                                       (launch-buddylist)))))
+     (fn [_ first-name last-name email phone username password]
+       (-> (user/sign-up first-name last-name email phone username password)
+           (.then (fn [user]
+                    (reset! *user* user)
+                    (-> @*win* :authentication .close)
+                    (launch-buddylist)))
+           (.catch (fn [errors]
+                     (println "Errors!:" (-> errors
+                                             .-response
+                                             .-data)))))))
 
 (defn notify-new-message [with-user message]
   (let [notification-params (clj->js {:title (str "New message from " with-user)
@@ -178,7 +183,7 @@
 
 (defn launch-unauth-flow []
   (-> @*win* :loading .close)
-  (swap! *win* assoc :authentication (BrowserWindow. (clj->js {:width 800 :height 600 :webPreferences {:nodeIntegration true :contextIsolation false}})))
+  (swap! *win* assoc :authentication (BrowserWindow. (clj->js {:width 600 :minWidth 570 :height 400 :minHeight 400 :titleBarStyle "hidden" :webPreferences {:nodeIntegration true :contextIsolation false}})))
   (.loadURL (:authentication @*win*) (str "file://" (.resolve path (js* "__dirname") "../resources/public/html/authentication.html")))
   (.on (:authentication @*win*) "closed" #(swap! *win* dissoc :authentication)))
 
@@ -199,7 +204,7 @@
   ;; ready listener
   (.on app "ready"
        (fn []
-         (swap! *win* assoc :loading (BrowserWindow. (clj->js {:width 800 :height 600 :frame false})))
+         (swap! *win* assoc :loading (BrowserWindow. (clj->js {:width 600 :height 400 :frame false})))
          ;; when no optimize comment out
          (.loadURL (:loading @*win*) (str "file://" (.resolve path (js* "__dirname") "../resources/public/html/index.html")))
          ;; when no optimize uncomment

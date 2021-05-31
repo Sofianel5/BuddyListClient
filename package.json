@@ -3,8 +3,10 @@
     "version": "1.0.0",
     "main": "resources/main.js",
     "scripts": {
-        "dev": "shadow-cljs watch main authentication add-buddy buddies chat",
-        "build": "shadow-cljs compile main authentication add-buddy buddies chat",
+        "dev:css": "NODE_ENV=development postcss src/buddylistclient/renderer/styles/css --base src/buddylistclient/renderer/styles/css --dir resources/public/css -w",
+        "release:css": "NODE_ENV=production postcss src/buddylistclient/renderer/styles/css --base src/buddylistclient/renderer/styles/css --dir resources/public/css",
+        "dev": "shadow-cljs watch main authentication add-buddy buddies chat styles",
+        "build": "shadow-cljs compile main authentication add-buddy buddies chat styles",
         "clean": "rm -rf resources/public/js/* && rm -rf target"
     },
     "devDependencies": {
@@ -14,24 +16,31 @@
         "electron-packager": "^8.5.1",
         "grunt": "^1.0.1",
         "grunt-download-electron": "^2.1.4",
+        "postcss-import": "^14.0.2",
         "schema-utils": "2.6.6",
         "shadow-cljs": "^2.8.110"
     },
     "license": "MIT",
     "repository": "https://github.com/Sofianel5/BuddyListClient",
     "dependencies": {
+        "@tailwindcss/forms": "^0.3.2",
+        "@tailwindcss/typography": "^0.4.1",
         "axios": "^0.21.1",
         "bufferutil": "^4.0.3",
+        "clean-css-cli": "^5.3.0",
         "coffeescript": "^2.5.1",
         "faye-websocket": "^0.11.3",
         "node-localstorage": "^2.1.6",
         "node-window-manager": "^2.2.4",
+        "postcss-cli": "^8.3.1",
+        "postcss-load-config": "^3.0.1",
         "query-string": "^7.0.0",
         "react": "16.13.0",
         "react-dom": "16.13.0",
         "react-phone-number-input": "^3.1.22",
         "schema-utils": "2.6.6",
         "sound-play": "^1.1.0",
+        "tailwindcss": "^2.1.2",
         "utf-8-validate": "^5.0.4"
     }
 }

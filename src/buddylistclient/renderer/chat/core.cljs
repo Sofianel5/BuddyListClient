@@ -41,7 +41,7 @@
              message (js->clj parsed :keywordize-keys true)]
          (swap! state conj message)
          (if (= (-> message :from) (:user data))
-           (.play (js/Audio. "../assets/imsend.wav"))))))
+           (.play (js/Audio. "../../sounds/imsend.wav"))))))
 
 (.on ipc-renderer "chat:loaded-history"
      (fn [_ parsed]
