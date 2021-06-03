@@ -1,7 +1,10 @@
 (ns buddylistclient.main.user
   (:require [cljs.nodejs :as nodejs]
             ["axios" :as axios]
+            ["request-promise" :as rp]
             ["path" :as path]
+            ["fs" :as fs]
+            ["form-data" :as FormData]
             ["node-localstorage" :refer [LocalStorage]]))
 
 (defn none-nil
@@ -54,22 +57,18 @@
     nil))
 
 (defn log-in [username password]
-  (if (none-nil username password)
-    (let [params {:username username :password password}
-          options (clj->js {:method "POST" :url "https://buddylist.app/login" :params params})
-          request (axios options)]
-      (.then request #(-> % (js->clj :keywordize-keys true) :data cache-user)))))
+  (let [params {:username username :password password}
+        options (clj->js {:method "POST" :url "https://buddylist.app/login" :params params})
+        request (axios options)]
+    (.then request #(-> % (js->clj :keywordize-keys true) :data cache-user))))
 
 (comment (.then (log-in "sofiane" "password") #(println (str "printing: " %))))
 
 (defn sign-up [first-name last-name email phone username password]
-  (if (none-nil username password phone)
-    (let [params {:username username :cleartext-password password :phone phone :first-name first-name :last-name last-name :email email}
-          options (clj->js {:method "POST" :url "https://buddylist.app/signup" :params params})
-          request (axios options)]
-      (.then request #(-> % (js->clj :keywordize-keys true) :data cache-user)))))
-
-(comment (.then (sign-up "real-user" "password" "666-666-6666") #(println (str "printing: " %))))
+  (let [params {:username username :cleartext-password password :phone phone :first-name first-name :last-name last-name :email email}
+        options (clj->js {:method "POST" :url "https://buddylist.app/signup" :params params})
+        request (axios options)]
+    (.then request #(-> % (js->clj :keywordize-keys true) :data cache-user))))
 
 (defn update-user [username auth-token]
   (let [headers {:authorization auth-token :request-user username}
@@ -101,3 +100,29 @@
     (-> request
         (.then #(.-data %))
         (.catch #(println %)))))
+
+(defn upload-pfp- [username auth-token f]
+  (let [form {:image {:value (.createReadStream fs (-> f
+                                                       .-filePaths
+                                                       (aget 0)
+                                                       .toString))
+                      :options {:contentType nil}}}
+        headers {:authorization auth-token :request-user username}
+        options (clj->js {:method "POST" :url "https://buddylist.app/set-pfp" :formData form :headers headers})
+        request (rp options)]
+    (-> request
+        (.then #(-> % (js->clj :keywordize-keys true)))
+        (.catch #(println "user.upload-pfp error:" %)))))
+
+(defn upload-pfp [username auth-token f]
+  (let [form (FormData.)
+        _ (.append form "image" (.createReadStream fs (-> f
+                                                          .-filePaths
+                                                          (aget 0)
+                                                          .toString)))
+        headers (merge {:authorization auth-token :request-user username} (-> form .getHeaders js->clj))
+        options (clj->js {:method "post" :url "https://buddylist.app/set-pfp" :data form :headers headers})
+        request (axios options)]
+    (-> request
+        (.then #(-> % (js->clj :keywordize-keys true) :data))
+        (.catch #(println "user.upload-pfp error:" %)))))

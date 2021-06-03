@@ -1,14 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html style="-webkit-app-region: drag">
 
 <head>
     <meta charset="UTF-8">
     <title>BuddyList</title>
+    <link rel="stylesheet" href="../css/styles.css" />
+    <style>
+        .container {
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        .image {
+            display: block;
+            box-sizing: border-box;
+        }
+        
+        .overlay {
+            position: absolute;
+            bottom: 0;
+            background: rgb(0, 0, 0);
+            background: rgba(0, 0, 0, 0.5);
+            /* Black see-through */
+            color: #f1f1f1;
+            width: 100%;
+            transition: .5s ease;
+            opacity: 0;
+            color: white;
+            font-size: 15px;
+            padding: 5px;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        
+        .container:hover .overlay {
+            opacity: 1;
+        }
+    </style>
 </head>
 
-<body>
-    <div id="app-container">
-    </div>
+<body id="app-container">
 </body>
 <script src="../js/buddies/buddies.js"></script>
 

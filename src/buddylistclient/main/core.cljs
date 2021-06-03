@@ -1,7 +1,7 @@
 (ns buddylistclient.main.core
   (:require
    [cljs.nodejs :as nodejs]
-   ["electron" :refer [app BrowserWindow Menu Tray ipcMain crashReporter Notification]]
+   ["electron" :refer [app BrowserWindow Menu Tray ipcMain crashReporter Notification dialog]]
    ["faye-websocket" :refer [Client]]
    ["path" :as path]
    [buddylistclient.main.forjure :refer [dissoc-in]]
@@ -78,7 +78,7 @@
 
 (defn launch-buddylist []
   (println "user:" @*user*)
-  (swap! *win* assoc :buddylist (BrowserWindow. (clj->js {:width 300 :minWidth 300 :height 700 :webPreferences {:nodeIntegration true :contextIsolation false}})))
+  (swap! *win* assoc :buddylist (BrowserWindow. (clj->js {:width 300 :minWidth 300 :height 700 :titleBarStyle "hidden" :webPreferences {:nodeIntegration true :contextIsolation false}})))
   (.loadURL (:buddylist @*win*) (str "file://" (.resolve path (js* "__dirname") "../resources/public/html/buddylist.html")))
   (.on (-> @*win* :buddylist .-webContents) "did-finish-load"
        (fn []
@@ -88,12 +88,12 @@
            (.on socket "close" #(println "Closing connection" %))
            (.on socket "message" on-buddy-message)
            (.on ipcMain "buddies:new-status" (fn [_ new-status]
-                                                (println "received new-status" new-status)
-                                                (let [package {:new-status new-status}
-                                                      encoded-message (->> package
-                                                                           clj->js
-                                                                           (.stringify js/JSON))]
-                                                  (.send socket encoded-message))))
+                                               (println "received new-status" new-status)
+                                               (let [package {:new-status new-status}
+                                                     encoded-message (->> package
+                                                                          clj->js
+                                                                          (.stringify js/JSON))]
+                                                 (.send socket encoded-message))))
            (.on (:buddylist @*win*) "closed" #(do
                                                 (.close socket)
                                                 (.removeAllListeners ipcMain "buddies:new-status")
@@ -101,10 +101,14 @@
 
 (.on ipcMain "login"
      (fn [_ username password]
-       (.then (user/log-in username password) (fn [user]
-                                                (reset! *user* user)
-                                                (-> @*win* :authentication .close)
-                                                (launch-buddylist)))))
+       (-> (user/log-in username password)
+           (.then (fn [user]
+                    (reset! *user* user)
+                    (-> @*win* :authentication .close)
+                    (launch-buddylist)))
+           (.catch (fn [_]
+                     (if-let [window (:authentication @*win*)]
+                       (.send (.-webContents window) "login-error")))))))
 
 (.on ipcMain "signup"
      (fn [_ first-name last-name email phone username password]
@@ -114,9 +118,11 @@
                     (-> @*win* :authentication .close)
                     (launch-buddylist)))
            (.catch (fn [errors]
-                     (println "Errors!:" (-> errors
-                                             .-response
-                                             .-data)))))))
+                     (if-let [window (:authentication @*win*)]
+                       (.send (.-webContents window) "signup-error" (-> errors
+                                                                        .-response
+                                                                        .-data
+                                                                        (#(.stringify js/JSON %))))))))))
 
 (defn notify-new-message [with-user message]
   (let [notification-params (clj->js {:title (str "New message from " with-user)
@@ -171,6 +177,26 @@
                 (.reload (-> @*win* :buddylist))
                 (.close (-> @*win* :add-buddy))))))
 
+(.on ipcMain "new-profile-pic"
+     (fn []
+       (-> (.showOpenDialog dialog (clj->js {:properties ["openFile"]
+                                             :title "Select Screen Image"
+                                             :message "Select Screen Image"
+                                             :buttonLabel "Upload"
+                                             :filters [{:name "Images"
+                                                        :extensions ["jpg" "png" "gif" "jpeg" "txt"]}]}))
+           (.then (fn [f]
+                    (if-not (.-canceled f)
+                      (-> (user/upload-pfp (:username @*user*) (:auth-token @*user*) f)
+                          (.then (fn [u]
+                                   (println u)
+                                   (reset! *user* u)
+                                   (if-let [window (:buddylist @*win*)]
+                                     (.send (.-webContents window) "user" (->> @*user* clj->js (.stringify js/JSON))))))
+                          (.catch (fn [err] (println "setting pfp server error:" err)))))))
+           (.catch (fn [err]
+                     (println "File error:" err))))))
+
 (defn open-addbuddy-win []
   (swap! *win* assoc :add-buddy (BrowserWindow. (clj->js {:width 300 :height 300 :webPreferences {:nodeIntegration true :contextIsolation false}})))
   (.loadURL (:add-buddy @*win*) (str "file://" (.resolve path (js* "__dirname") "../resources/public/html/addbuddy.html")))
@@ -189,7 +215,7 @@
 
 (defn main []
   (.start crashReporter (clj->js {:companyName "BuddyList"
-                                   :submitURL   "https://buddylist.app"}))
+                                  :submitURL   "https://buddylist.app"}))
 
   ;; error listener
   (.on nodejs/process "error"
@@ -204,7 +230,7 @@
   ;; ready listener
   (.on app "ready"
        (fn []
-         (swap! *win* assoc :loading (BrowserWindow. (clj->js {:width 600 :height 400 :frame false})))
+         (swap! *win* assoc :loading (BrowserWindow. (clj->js {:width 400 :height 300 :frame false})))
          ;; when no optimize comment out
          (.loadURL (:loading @*win*) (str "file://" (.resolve path (js* "__dirname") "../resources/public/html/index.html")))
          ;; when no optimize uncomment
@@ -212,7 +238,6 @@
          ; Check to see if there is a cached user (ie. app is not fresh)
          (if-let [user (user/get-user)]
            (.then user (fn [u] (if u (do
-                                       (launch-unauth-flow)
                                        (println "User:" u)
                                        (reset! *user* u)
                                        (-> @*win* :loading .close)

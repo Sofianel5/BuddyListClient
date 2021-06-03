@@ -2,7 +2,6 @@
   (:require  [reagent.core :refer [atom]]
              [reagent.dom :as rd]
              [cljs.nodejs :as nodejs]
-             [reagent-modals.modals :as reagent-modals]
              ["react-phone-number-input" :default PhoneInput]))
 
 (def Electron (nodejs/require "electron"))
@@ -17,6 +16,9 @@
                                    (let [parsed (.parse js/JSON errors)
                                          errors (js->clj parsed :keywordize-keys true)]
                                      (swap! state assoc :errors errors))))
+
+(.on ipc-renderer "login-error" (fn [_]
+                                  (swap! state assoc :login-error true)))
 
 (defn submit-login-form [event]
   (.preventDefault event)
@@ -38,44 +40,85 @@
   [:form {:on-submit #(submit-login-form %)
           :class "flex flex-row justify-center mt-[10px]"}
    [:div {:class "mx-[10px]"}
-    [:p {:class "mb-[5px] uppercase text-gray-400 text-[10px]"} "username"]
+    [:p {:class "mb-[5px] uppercase text-gray-400 text-[10px]"} "screen name"]
     [:input {:class "bg-[#FFFAFF]" :type "text" :name "username" :id "username" :placeholder "hacker123"}]]
    [:div {:class "mx-[10px]"}
-    [:p {:class "mb-[5px] uppercase text-gray-400 text-[10px]"} "password"]
+    [:div {:class "flex flex-row justify-between"}
+     [:p {:class "mb-[5px] uppercase text-gray-400 text-[10px]"} "password"]
+     [:div {:class "tooltip w-[10px] bg-center bg-no-repeat bg-contain mb-[5px] uppercase cursor-pointer"
+            :style {:display (if (:login-error @state) "block" "none")
+                    :background-image "url('../img/error.svg')"}}
+      [:ul {:class "list-inside shadow-2xl tooltiptext text-xs list-disc normal-case"}
+       [:li "Invalid password or error."]]]]
     [:input {:class "bg-[#FFFAFF]" :type "password" :name "password" :id "password" :placeholder "SomethingSecure!"}]]
    [:input {:class "focus:outline-none cursor-pointer bg-[#09BC8A] w-screen h-[75px] absolute inset-x-0 bottom-0 text-[#FFFAFF] font-semibold"
             :type "submit" :value "See Buddies!"}]])
 
 (defn signup-form []
   [:form {:on-submit #(submit-signup-form %)
-          :class "mt-[10px] px-[50px]"}
+          :class "mt-[10px] px-[100px]"}
    [:div {:class "flex flex-row justify-between mb-[10px]"}
     [:div {:class "mx-[10px]"}
      [:div {:class "flex flex-row justify-between"}
       [:p {:class "mb-[5px] uppercase text-gray-400 text-[10px]"} "first name"]
       [:div {:class "tooltip w-[10px] bg-center bg-no-repeat bg-contain mb-[5px] uppercase cursor-pointer"
-             :style {:display (if (:errors @state) "block" "block")
+             :style {:display (if (and (:errors @state) (not (empty? (-> @state :errors :first-name)))) "block" "none")
                      :background-image "url('../img/error.svg')"}}
        [:ul {:class "list-inside shadow-2xl tooltiptext text-xs list-disc normal-case"}
-        [:li "something wrong with this"]
-        [:li "something wrong with that"]]]]
+        (for [error (-> @state :errors :first-name)]
+          [:li error])]]]
      [:input {:class "bg-[#FFFAFF]" :type "text" :name "first-name" :id "first-name" :placeholder "Sofiane"}]]
     [:div {:class "mx-[10px]"}
-     [:p {:class "flex mb-[5px] uppercase text-gray-400 text-[10px]"} "last name"]
+     [:div {:class "flex flex-row justify-between"}
+      [:p {:class "mb-[5px] uppercase text-gray-400 text-[10px]"} "last name"]
+      [:div {:class "tooltip w-[10px] bg-center bg-no-repeat bg-contain mb-[5px] uppercase cursor-pointer"
+             :style {:display (if (and (:errors @state) (not (empty? (-> @state :errors :last-name)))) "block" "none")
+                     :background-image "url('../img/error.svg')"}}
+       [:ul {:class "list-inside shadow-2xl tooltiptext text-xs list-disc normal-case"}
+        (for [error (-> @state :errors :last-name)]
+          [:li error])]]]
      [:input {:class "bg-[#FFFAFF]" :type "text" :name "last-name" :id "last-name" :placeholder "Larbi"}]]]
    [:div {:class "flex flex-row justify-between mb-[10px]"}
     [:div {:class "mx-[10px]"}
-     [:p {:class "mb-[5px] uppercase text-gray-400 text-[10px]"} "email"]
+     [:div {:class "flex flex-row justify-between"}
+      [:p {:class "mb-[5px] uppercase text-gray-400 text-[10px]"} "email"]
+      [:div {:class "tooltip w-[10px] bg-center bg-no-repeat bg-contain mb-[5px] uppercase cursor-pointer"
+             :style {:display (if (and (:errors @state) (not (empty? (-> @state :errors :email)))) "block" "none")
+                     :background-image "url('../img/error.svg')"}}
+       [:ul {:class "list-inside shadow-2xl tooltiptext text-xs list-disc normal-case"}
+        (for [error (-> @state :errors :email)]
+          [:li error])]]]
      [:input {:class "bg-[#FFFAFF]" :type "email" :name "email" :id "email" :placeholder "sofiane@stanford.edu"}]]
     [:div {:class "mx-[10px]"}
-     [:p {:class "mb-[5px] ml-[40px] uppercase text-gray-400 text-[10px]"} "phone number"]
+     [:div {:class "flex flex-row justify-between"}
+      [:p {:class "mb-[5px] ml-[40px] uppercase text-gray-400 text-[10px]"} "phone number"]
+      [:div {:class "tooltip w-[10px] bg-center bg-no-repeat bg-contain mb-[5px] uppercase cursor-pointer"
+             :style {:display (if (and (:errors @state) (not (empty? (-> @state :errors :phone)))) "block" "none")
+                     :background-image "url('../img/error.svg')"}}
+       [:ul {:class "list-inside shadow-2xl tooltiptext text-xs list-disc normal-case"}
+        (for [error (-> @state :errors :phone)]
+          [:li error])]]]
      [:> PhoneInput {:defaultCountry "US" :onChange #(reset! phone-number %) :placeholder "(646) 220-3750"}]]]
    [:div {:class "flex flex-row justify-between mb-[10px]"}
     [:div {:class "mx-[10px]"}
-     [:p {:class "mb-[5px] uppercase text-gray-400 text-[10px]"} "username"]
+     [:div {:class "flex flex-row justify-between"}
+      [:p {:class "mb-[5px] uppercase text-gray-400 text-[10px]"} "screen name"]
+      [:div {:class "tooltip w-[10px] bg-center bg-no-repeat bg-contain mb-[5px] uppercase cursor-pointer"
+             :style {:display (if (and (:errors @state) (not (empty? (-> @state :errors :username)))) "block" "none")
+                     :background-image "url('../img/error.svg')"}}
+       [:ul {:class "list-inside shadow-2xl tooltiptext text-xs list-disc normal-case"}
+        (for [error (-> @state :errors :username)]
+          [:li error])]]]
      [:input {:class "bg-[#FFFAFF]" :type "text" :name "username" :id "username" :placeholder "sofiane"}]]
     [:div {:class "mx-[10px]"}
-     [:p {:class "mb-[5px] uppercase text-gray-400 text-[10px]"} "password"]
+     [:div {:class "flex flex-row justify-between"}
+      [:p {:class "mb-[5px] uppercase text-gray-400 text-[10px]"} "password"]
+      [:div {:class "tooltip w-[10px] bg-center bg-no-repeat bg-contain mb-[5px] uppercase cursor-pointer"
+             :style {:display (if (and (:errors @state) (not (empty? (-> @state :errors :password)))) "block" "none")
+                     :background-image "url('../img/error.svg')"}}
+       [:ul {:class "list-inside shadow-2xl tooltiptext text-xs list-disc normal-case"}
+        (for [error (-> @state :errors :password)]
+          [:li error])]]]
      [:input {:type "password" :name "password" :id "password" :placeholder "SomethingSecure!"}]]]
    [:input {:class "focus:outline-none cursor-pointer bg-[#09BC8A] w-screen h-[75px] absolute inset-x-0 bottom-0 text-[#FFFAFF] font-semibold"
             :type "submit" :value "Join!"}]])
@@ -88,7 +131,7 @@
 (defn toggle-auth-type []
   (swap! state assoc :type (if (= (:type @state) :login) :sign-up :login))
   (if (= (:type @state) :sign-up)
-    (.resizeTo js/window 600 550)
+    (.resizeTo js/window 700 550)
     (.resizeTo js/window 600 400)))
 
 (defn auth-type-switcher []
@@ -107,8 +150,7 @@
             :src "../img/aim.png"}]]]
    [:h4 {:class "mt-[10px] text-center text-[#FFFAFF] font-semibold"} (if (= (:type @state) :login) "Log in to see your buddies!" "Create an account to connect!")]
    [auth-form]
-   [auth-type-switcher]
-   [reagent-modals/modal-window]])
+   [auth-type-switcher]])
 
 (defn ^:dev/after-load start! []
   (rd/render
