@@ -127,7 +127,7 @@
 (defn notify-new-message [with-user message]
   (let [notification-params (clj->js {:title (str "New message from " with-user)
                                       :body message
-                                      :sound (.resolve path (js* "__dirname") "../assets/imrcv.wav")})
+                                      :sound (.resolve path (js* "__dirname") "../resources/public/sounds/imrcv.wav")})
         notification (Notification. notification-params)]
     (.show notification)))
 
@@ -150,9 +150,9 @@
         (println new-max old-max))
       (println "new max null" old-max))))
 
-(defn launch-chat [with-user]
-  (swap! *win* assoc-in [:chats with-user] (BrowserWindow. (clj->js {:width 500 :height 400 :webPreferences {:nodeIntegration true :contextIsolation false}})))
-  (.loadFile (-> @*win* :chats (get with-user)) (.resolve path (js* "__dirname") "../resources/public/html/chat.html") (clj->js {:query {:with-user with-user :user (:username @*user*)}}))
+(defn launch-chat [with-user data]
+  (swap! *win* assoc-in [:chats with-user] (BrowserWindow. (clj->js {:width 500 :minWidth 350 :height 400 :titleBarStyle "hidden" :webPreferences {:nodeIntegration true :contextIsolation false}})))
+  (.loadFile (-> @*win* :chats (get with-user)) (.resolve path (js* "__dirname") "../resources/public/html/chat.html") (clj->js {:query {:with-user data :user (->> @*user* clj->js (.stringify js/JSON))}}))
   (.on (-> @*win* :chats (get with-user) .-webContents) "did-finish-load"
        (fn []
          (println "chat did-finish-load " with-user)
@@ -165,15 +165,16 @@
   (.on (-> @*win* :chats (get with-user)) "closed" #(swap! *win* dissoc-in [:chats with-user])))
 
 (.on ipcMain "buddies:selected"
-     (fn [_ username]
-       (if-not (contains? (:chats @*win*) username)
-         (launch-chat username)
-         (.show (-> @*win* :chats (get username))))))
+     (fn [_ buddy data]
+       (println "data:" data)
+       (if-not (contains? (:chats @*win*) buddy)
+         (launch-chat buddy data)
+         (.show (-> @*win* :chats (get buddy))))))
 
 (.on ipcMain "addbuddy"
      (fn [_ buddy-username]
        (.then (user/add-buddy (:username @*user*) (:auth-token @*user*) buddy-username)
-              (fn [m]
+              (fn [_]
                 (.reload (-> @*win* :buddylist))
                 (.close (-> @*win* :add-buddy))))))
 
@@ -196,6 +197,14 @@
                           (.catch (fn [err] (println "setting pfp server error:" err)))))))
            (.catch (fn [err]
                      (println "File error:" err))))))
+
+(.on ipcMain "new-buddies-order"
+     (fn [_ new-buddies-order]
+       (-> (user/set-new-buddies-order (:username @*user*) (:auth-token @*user*) (js->clj new-buddies-order))
+           (.then (fn [m]
+                    (reset! *user* (js->clj m :keywordize-keys true))))
+           (.catch (fn [err]
+                     (println "new-buddies-order.err:" err))))))
 
 (defn open-addbuddy-win []
   (swap! *win* assoc :add-buddy (BrowserWindow. (clj->js {:width 300 :height 300 :webPreferences {:nodeIntegration true :contextIsolation false}})))

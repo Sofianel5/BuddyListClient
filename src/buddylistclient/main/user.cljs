@@ -101,19 +101,6 @@
         (.then #(.-data %))
         (.catch #(println %)))))
 
-(defn upload-pfp- [username auth-token f]
-  (let [form {:image {:value (.createReadStream fs (-> f
-                                                       .-filePaths
-                                                       (aget 0)
-                                                       .toString))
-                      :options {:contentType nil}}}
-        headers {:authorization auth-token :request-user username}
-        options (clj->js {:method "POST" :url "https://buddylist.app/set-pfp" :formData form :headers headers})
-        request (rp options)]
-    (-> request
-        (.then #(-> % (js->clj :keywordize-keys true)))
-        (.catch #(println "user.upload-pfp error:" %)))))
-
 (defn upload-pfp [username auth-token f]
   (let [form (FormData.)
         _ (.append form "image" (.createReadStream fs (-> f
@@ -126,3 +113,13 @@
     (-> request
         (.then #(-> % (js->clj :keywordize-keys true) :data))
         (.catch #(println "user.upload-pfp error:" %)))))
+
+(defn set-new-buddies-order [username auth-token new-buddies-order]
+  (println new-buddies-order)
+  (let [headers {:authorization auth-token :request-user username "Content-Type" "application/json"}
+        params {:new-buddies-order new-buddies-order}
+        options (clj->js {:method "POST" :url "https://buddylist.app/rearrange-buddies" :headers headers :data params})
+        request (axios options)]
+    (-> request
+        (.then #(.-data %))
+        (.catch #(println (-> % .-response .-data))))))
