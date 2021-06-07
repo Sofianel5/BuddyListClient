@@ -1,7 +1,6 @@
 (ns buddylistclient.main.user
   (:require [cljs.nodejs :as nodejs]
             ["axios" :as axios]
-            ["request-promise" :as rp]
             ["path" :as path]
             ["fs" :as fs]
             ["form-data" :as FormData]
@@ -23,6 +22,10 @@
 (def user-key "user")
 
 (def buddies-key "buddies")
+
+(defn clear-all []
+  (.removeItem store user-key)
+  (.removeItem store buddies-key))
 
 (defn chat-key [with-user]
   (str "chat-" with-user))
@@ -47,14 +50,6 @@
 
 (defn cache-buddies-str [buddies-str]
   (cache-string buddies-str buddies-key))
-
-(defn update-messages-count [with-user new-count]
-  (.setItem store (chat-key with-user) (str new-count)))
-
-(defn get-message-count [with-user]
-  (if-let [count-str (.getItem store (chat-key with-user))]
-    (js/parseInt count-str)
-    nil))
 
 (defn log-in [username password]
   (let [params {:username username :password password}

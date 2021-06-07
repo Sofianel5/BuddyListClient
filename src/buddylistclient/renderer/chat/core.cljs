@@ -69,9 +69,7 @@
 (defn message-list [messages]
   (create-class
    {:component-did-update (fn [_ _] (if-let [element (js/document.getElementById "message-list")]
-                                      (do
-                                        (set! (.-scrollTop element) (.-scrollHeight element))
-                                        (println "done!"))
+                                      (set! (.-scrollTop element) (.-scrollHeight element))
                                       (println "not rendered message-list yet")))
     :reagent-render
     (fn [messages] [:ul {:class "overflow-y-scroll"
@@ -112,7 +110,7 @@
 
 (defn chat-header [with-user]
   [:div {:class "flex flex-row justify-start px-[75px] py-[5px] bg-[#303036] cursor-pointer"}
-   [:img {:class "w-[50px] h-[50px] m-w-[50px] m-h-[50px] rounded-full overflow-hidden mr-[10px]" :src (if (nil? (:profile-picture with-user)) "../img/smiley.svg" (:profile-picture with-user))}]
+   [:img {:class "w-[50px] h-[50px] m-w-[50px] m-h-[50px] rounded-full overflow-hidden mr-[10px]" :src (if (nil? (:profile-pic with-user)) "../img/smiley.svg" (:profile-pic with-user))}]
    [:div {:class "flex flex-col justify-evenly"}
     [:h4 {:class "font-semibold"} (:username with-user)]
     [:h6 {:class "font-normal text-xs"} (:status with-user)]]])

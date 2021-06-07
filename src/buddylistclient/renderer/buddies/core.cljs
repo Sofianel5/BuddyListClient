@@ -68,12 +68,14 @@
                                         (as-element
                                          [:li (merge {:ref inner-ref :isdragging is-dragging}
                                                      draggable-props
-                                                     {:class "flex flex-row justify-start px-[20px] my-[10px] cursor-pointer" :on-click #(put! event-channel [:buddy-clicked buddy])}
+                                                     {:class "flex flex-row justify-between px-[20px] my-[10px] cursor-pointer" :on-click #(put! event-channel [:buddy-clicked buddy])}
                                                      drag-handler-props)
-                                          [:img {:class "w-[50px] h-[50px] m-w-[50px] m-h-[50px] rounded-full overflow-hidden mr-[10px]" :src (if (nil? (:profile-picture buddy)) "../img/smiley.svg" (:profile-picture buddy))}]
-                                          [:div {:class "flex flex-col justify-evenly"}
-                                           [:h4 {:class "font-semibold"} (:username buddy)]
-                                           [:h6 {:class "font-normal text-xs"} (:status buddy)]]])))]) buddies)
+                                          [:div {:class "flex flex-row justify-start"}
+                                           [:img {:class "w-[50px] h-[50px] min-w-[50px] min-h-[50px] rounded-full overflow-hidden mr-[10px]" :src (if (nil? (:profile-pic buddy)) "../img/smiley.svg" (:profile-pic buddy))}]
+                                           [:div {:class "flex flex-col justify-evenly"}
+                                            [:h4 {:class "font-semibold"} (:username buddy)]
+                                            [:h6 {:class "font-normal text-xs"} (:status buddy)]]]
+                                          [:img {:class "w-[20px]" :src "../img/reorder.svg"}]])))]) buddies)
                     placeholder])))])
 
 (defn on-new-status-submit [e _]
@@ -85,7 +87,7 @@
   [:div {:class "m-[20px]"}
    [:form {:on-submit #(on-new-status-submit % event-channel) :class "flex flex-col justify-start"
            :style {"-webkit-app-region" "no-drag"}}
-    [:textarea {:class "text-[#050401] focus:border-[#30BCED] resize-y text-xs h-[50px] min-h-[50px]" :type "text" :id "new-status-input" :placeholder "New status"}]
+    [:input {:class "text-[#050401] focus:border-[#30BCED text-xs h-[50px] min-h-[50px]" :type "text" :id "new-status-input" :placeholder "New status"}]
     [:input {:type "submit" :value "Change" :class "bg-[#09BC8A] cursor-pointer focus:outline-none mt-[5px] py-[10px] font-semibold"}]]])
 
 (defn on-add-buddy [event]
@@ -95,7 +97,7 @@
 (defn open-add-buddy []
   [:div {:class "flex flex-row justify-center mt-[15px]"}
    [:button {:on-click #(on-add-buddy %)
-             :class "cursor-pointer font-semibold text-[#30BCED]"}
+             :class "cursor-pointer font-semibold text-[#30BCED] focus:outline-none"}
     "Add buddy!"]])
 
 (defn on-drag-end [result]
@@ -108,11 +110,15 @@
 
 (defn root-component []
   [:div {:class "relative h-screen w-screen font-sans bg-[#303036] py-[5px] select-none text-[#FFFAFF] overflow-x-hidden"}
-   [:h4 {:class "mb-[30px] text-center"} "BuddyList"]
+   [:div {:class "flex flex-row justify-between"}
+    [:span {:class "w-[30px] h-[30px]"}]
+    [:h4 {:class "mb-[30px] text-center"} "BuddyList"]
+    [:img {:class "w-[30px] h-[30px] mr-[5px] cursor-pointer" :src "../img/settings.svg"
+           :on-click #(.send ipc-renderer "open-settings")}]]
    [:div {:class "flex flex-row justify-start px-[20px]"}
     [:div {:class "cursor-pointer container w-[100px] h-[100px] m-w-[100px] m-h-[100px] rounded-full overflow-hidden mr-[20px]"
            :on-click #(.send ipc-renderer "new-profile-pic")}
-     [:img {:class "image w-[100px] h-[100px] m-w-[100px] m-h-[100px]" :src (if (nil? (:profile-pic @*user*)) "../img/smiley.svg" (:profile-pic @*user*))}]
+     [:img {:class "image w-[100px] h-[100px] min-w-[100px] min-h-[100px]" :src (if (nil? (:profile-pic @*user*)) "../img/smiley.svg" (:profile-pic @*user*))}]
      [:div {:class "overlay"} "Change"]]
     [:div {:class "flex flex-col justify-evenly max-w-[140px]"}
      [:h3 {:class "font-bold"} (str (:first-name @*user*) " " (:last-name @*user*))]

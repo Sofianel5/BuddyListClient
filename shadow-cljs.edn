@@ -7,7 +7,7 @@
                 [cljsjs/react-beautiful-dnd "12.2.0-2"]]
 
  :dev-http {8080 "resources/public/"}
- 
+
  :devtools {:ignore-warnings true}
 
  :builds {:main {:target :node-script
@@ -33,7 +33,12 @@
                  :output-dir "resources/public/js/chat"
                  :asset-path "js"
                  :modules {:chat {:init-fn buddylistclient.renderer.chat.core/start!}}}
-          
+
+          :settings {:target :browser
+                     :output-dir "resources/public/js/settings"
+                     :asset-path "js"
+                     :modules {:settings {:init-fn buddylistclient.renderer.settings.core/start!}}}
+
           :styles {:target :browser
                    :output-dir "resources/public/js/styles"
                    :asset-path "js"

@@ -5,8 +5,8 @@
     "scripts": {
         "dev:css": "NODE_ENV=development postcss src/buddylistclient/renderer/styles/css --base src/buddylistclient/renderer/styles/css --dir resources/public/css -w",
         "release:css": "NODE_ENV=production postcss src/buddylistclient/renderer/styles/css --base src/buddylistclient/renderer/styles/css --dir resources/public/css",
-        "dev": "shadow-cljs watch main authentication add-buddy buddies chat styles",
-        "build": "shadow-cljs compile main authentication add-buddy buddies chat styles",
+        "dev": "shadow-cljs watch main authentication add-buddy buddies chat styles settings",
+        "build": "shadow-cljs compile main authentication add-buddy buddies chat styles settings",
         "clean": "rm -rf resources/public/js/* && rm -rf target"
     },
     "devDependencies": {
@@ -21,10 +21,11 @@
         "shadow-cljs": "^2.8.110"
     },
     "license": "MIT",
-    "repository": "https://github.com/Sofianel5/BuddyListClient",
+    "repository": "https://github.com/Sofianel5/BuddyListPublic",
     "dependencies": {
         "@tailwindcss/forms": "^0.3.2",
         "@tailwindcss/typography": "^0.4.1",
+        "auto-launch": "^5.0.5",
         "autoprefixer": "^10.2.6",
         "axios": "^0.21.1",
         "bufferutil": "^4.0.3",
@@ -47,6 +48,7 @@
         "schema-utils": "2.6.6",
         "sound-play": "^1.1.0",
         "tailwindcss": "^2.1.2",
+        "update-electron-app": "^2.0.1",
         "utf-8-validate": "^5.0.4"
     }
 }

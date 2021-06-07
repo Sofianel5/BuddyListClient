@@ -4,9 +4,10 @@
    ["electron" :refer [app BrowserWindow Menu Tray ipcMain crashReporter Notification dialog]]
    ["faye-websocket" :refer [Client]]
    ["path" :as path]
+   ["sound-play" :as sound]
    [buddylistclient.main.forjure :refer [dissoc-in]]
    [buddylistclient.main.user :as user]
-   [buddylistclient.main.util :as util]))
+   ["auto-launch" :as AutoLaunch]))
 
 (def *win* (atom {}))
 
@@ -76,6 +77,32 @@
       (if-let [window (:buddylist @*win*)]
         (.send (.-webContents window) "user" (->> @*user* clj->js (.stringify js/JSON)))))))
 
+(defn connect-buddylist []
+  (let [socket (Client. "wss://buddylist.app/buddies" nil (clj->js {:headers {:authorization (:auth-token @*user*) :request-user (:username @*user*)}}))
+        on-new-status-handler (fn [_ new-status]
+                                (println "received new-status" new-status)
+                                (let [package {:new-status new-status}
+                                      encoded-message (->> package
+                                                           clj->js
+                                                           (.stringify js/JSON))]
+                                  (.send socket encoded-message)))
+        on-win-closed-handler #(do
+                                 (.close socket)
+                                 (.removeAllListeners ipcMain "buddies:new-status")
+                                 (swap! *win* dissoc :buddylist))]
+    (.on socket "open" #(println "Opening buddylist ws" %))
+    (.on socket "close" (fn [_]
+                          (println "buddylist ws closed")
+                          (.removeAllListeners ipcMain "buddies:new-status")
+                          (if-let [buddylist-win (:buddylist @*win*)]
+                            (do
+                              (.removeAllListeners buddylist-win "closed")
+                              (connect-buddylist)))))
+    (.on socket "error" #(println "error in buddylist ws" %))
+    (.on socket "message" on-buddy-message)
+    (.on ipcMain "buddies:new-status" on-new-status-handler)
+    (.on (:buddylist @*win*) "closed" on-win-closed-handler)))
+
 (defn launch-buddylist []
   (println "user:" @*user*)
   (swap! *win* assoc :buddylist (BrowserWindow. (clj->js {:width 300 :minWidth 300 :height 700 :titleBarStyle "hidden" :webPreferences {:nodeIntegration true :contextIsolation false}})))
@@ -83,21 +110,7 @@
   (.on (-> @*win* :buddylist .-webContents) "did-finish-load"
        (fn []
          (.send (-> @*win* :buddylist .-webContents) "user" (->> @*user* clj->js (.stringify js/JSON)))
-         (let [socket (Client. "ws://50.16.117.236:8000/buddies" nil (clj->js {:headers {:authorization (:auth-token @*user*) :request-user (:username @*user*)}}))]
-           (.on socket "open" #(println "Opening connection" %))
-           (.on socket "close" #(println "Closing connection" %))
-           (.on socket "message" on-buddy-message)
-           (.on ipcMain "buddies:new-status" (fn [_ new-status]
-                                               (println "received new-status" new-status)
-                                               (let [package {:new-status new-status}
-                                                     encoded-message (->> package
-                                                                          clj->js
-                                                                          (.stringify js/JSON))]
-                                                 (.send socket encoded-message))))
-           (.on (:buddylist @*win*) "closed" #(do
-                                                (.close socket)
-                                                (.removeAllListeners ipcMain "buddies:new-status")
-                                                (swap! *win* dissoc :buddylist)))))))
+         (connect-buddylist))))
 
 (.on ipcMain "login"
      (fn [_ username password]
@@ -127,8 +140,9 @@
 (defn notify-new-message [with-user message]
   (let [notification-params (clj->js {:title (str "New message from " with-user)
                                       :body message
-                                      :sound (.resolve path (js* "__dirname") "../resources/public/sounds/imrcv.wav")})
+                                      :silent true})
         notification (Notification. notification-params)]
+    (.play sound (.resolve path (js* "__dirname") "../resources/public/sounds/imrcv.wav"))
     (.show notification)))
 
 (defn on-message-recieved [e]
@@ -137,18 +151,12 @@
                         .-data
                         (.parse js/JSON))
         message (js->clj js-message :keywordize-keys true)
-        with-user (:to message)
-        old-max (user/get-message-count with-user)]
+        with-user (if (= (:to message) (:username @*user*)) (:from message) (:to message))]
     (if-let [window (-> @*win* :chats (get with-user))]
-      (.send (.-webContents window) "chat:received" (.-data e)))
-    (if-let [new-max (util/get-max-id (:username @*user*) message)]
-      (if (> new-max old-max)
-        (do
-          (println new-max old-max)
-          (user/update-messages-count with-user new-max)
-          (notify-new-message with-user (:message message)))
-        (println new-max old-max))
-      (println "new max null" old-max))))
+      (.send (.-webContents window) "chat:received" (.-data e))
+      (println "window not available"))
+    (if (= (:to message) (:username @*user*))
+      (notify-new-message with-user (:message message)))))
 
 (defn launch-chat [with-user data]
   (swap! *win* assoc-in [:chats with-user] (BrowserWindow. (clj->js {:width 500 :minWidth 350 :height 400 :titleBarStyle "hidden" :webPreferences {:nodeIntegration true :contextIsolation false}})))
@@ -159,7 +167,6 @@
          (.then (user/get-chat-history (:username @*user*) (:auth-token @*user*) with-user 0 25)
                 (fn [data]
                   (println data)
-                  (println (first data))
                   (if-let [window (-> @*win* :chats (get with-user))]
                     (.send (.-webContents window) "chat:loaded-history" data))))))
   (.on (-> @*win* :chats (get with-user)) "closed" #(swap! *win* dissoc-in [:chats with-user])))
@@ -207,20 +214,63 @@
                      (println "new-buddies-order.err:" err))))))
 
 (defn open-addbuddy-win []
-  (swap! *win* assoc :add-buddy (BrowserWindow. (clj->js {:width 300 :height 300 :webPreferences {:nodeIntegration true :contextIsolation false}})))
-  (.loadURL (:add-buddy @*win*) (str "file://" (.resolve path (js* "__dirname") "../resources/public/html/addbuddy.html")))
-  (.on (:add-buddy @*win*) "closed" #(do
-                                       (.removeAllListeners ipcMain "open-addbuddy")
-                                       (swap! *win* dissoc :add-buddy))))
-(.on ipcMain "open-addbuddy"
-     (fn [_]
-       (open-addbuddy-win)))
+  (if-not (:add-buddy @*win*)
+    (do
+      (swap! *win* assoc :add-buddy (BrowserWindow. (clj->js {:width 300 :height 300 :webPreferences {:nodeIntegration true :contextIsolation false}})))
+      (.loadURL (:add-buddy @*win*) (str "file://" (.resolve path (js* "__dirname") "../resources/public/html/addbuddy.html")))
+      (.on (:add-buddy @*win*) "closed" #(swap! *win* dissoc :add-buddy)))
+    (.show (:add-buddy @*win*))))
+
+(.on ipcMain "open-addbuddy" open-addbuddy-win)
+
+(defn open-settings-win []
+  (if-not (:settings @*win*)
+    (do
+      (swap! *win* assoc :settings (BrowserWindow. (clj->js {:width 600 :height 500 :titleBarStyle "hidden" :webPreferences {:nodeIntegration true :contextIsolation false}})))
+      (.loadFile (:settings @*win*) (.resolve path (js* "__dirname") "../resources/public/html/settings.html") (clj->js {:query {:user (->> @*user* clj->js (.stringify js/JSON))}}))
+      (.on (:settings @*win*) "closed" #(swap! *win* dissoc :settings)))
+    (.show (:settings @*win*))))
+
+(.on ipcMain "open-settings" open-settings-win)
 
 (defn launch-unauth-flow []
-  (-> @*win* :loading .close)
+  (if-let [loading-win (:loading @*win*)]
+    (.close loading-win))
   (swap! *win* assoc :authentication (BrowserWindow. (clj->js {:width 600 :minWidth 570 :height 400 :minHeight 400 :titleBarStyle "hidden" :webPreferences {:nodeIntegration true :contextIsolation false}})))
   (.loadURL (:authentication @*win*) (str "file://" (.resolve path (js* "__dirname") "../resources/public/html/authentication.html")))
   (.on (:authentication @*win*) "closed" #(swap! *win* dissoc :authentication)))
+
+(defn connect-chat []
+  (let [socket (Client. (str "wss://buddylist.app/chat") nil (clj->js {:headers {:authorization (:auth-token @*user*) :request-user (:username @*user*)}}))
+        on-chat-sent (fn [_ to message]
+                       (println "recieved chat from Client")
+                       (let [package {:to to :message message}
+                             encoded-message (->> package
+                                                  clj->js
+                                                  (.stringify js/JSON))]
+                         (.send socket encoded-message)))]
+    (.on socket "open" #(println "Opened chat ws" %))
+    (.on socket "close" (fn [_]
+                          (println "chat ws closed")
+                          (.removeAllListeners ipcMain "chat:sent")
+                          (connect-chat)))
+    (.on socket "message" #(on-message-recieved %))
+    (.on ipcMain "chat:sent" on-chat-sent)))
+
+(defn close-all-windows [wins]
+  (println (count wins))
+  (doseq [window (vals wins)]
+    (if (map? window)
+      (close-all-windows window)
+      (.close window))))
+
+(defn logout []
+  (close-all-windows @*win*)
+  (reset! *user* {})
+  (user/clear-all)
+  (launch-unauth-flow))
+
+(.on ipcMain "logout" logout)
 
 (defn main []
   (.start crashReporter (clj->js {:companyName "BuddyList"
@@ -242,6 +292,7 @@
          (swap! *win* assoc :loading (BrowserWindow. (clj->js {:width 400 :height 300 :frame false})))
          ;; when no optimize comment out
          (.loadURL (:loading @*win*) (str "file://" (.resolve path (js* "__dirname") "../resources/public/html/index.html")))
+         (.on (:loading @*win*) "closed" #(swap! *win* dissoc :loading))
          ;; when no optimize uncomment
          ;; (.loadURL @*win* (str "file://" (.resolve path (js* "__dirname") "../../../index.html")))
          ; Check to see if there is a cached user (ie. app is not fresh)
@@ -252,23 +303,14 @@
                                        (-> @*win* :loading .close)
                                        (launch-buddylist)
                                        (user/cache-user @*user*)
-                                       (let [socket (Client. (str "ws://50.16.117.236:8000/chat") nil (clj->js {:headers {:authorization (:auth-token @*user*) :request-user (:username @*user*)}}))]
-                                         (.on socket "open" #(println "Opening connection" %))
-                                         (.on socket "close" #(println "Closing connection" %))
-                                         (.on socket "message" #(on-message-recieved %))
-                                         (.on ipcMain "chat:sent"
-                                              (fn [_ to message]
-                                                (println "recieved chat from Client")
-                                                (let [package {:to to :message message}
-                                                      encoded-message (->> package
-                                                                           clj->js
-                                                                           (.stringify js/JSON))]
-                                                  (.send socket encoded-message))))))
+                                       (connect-chat))
                                    (launch-unauth-flow))))
            (launch-unauth-flow))
          (let [tray (Tray. (.resolve path (js* "__dirname") "../assets/list.png"))
                context-menu (.buildFromTemplate Menu (clj->js [{:label "BuddyList"}]))]
            (.setToolTip tray "BuddyList")
-           (.setContextMenu tray context-menu))))
+           (.setContextMenu tray context-menu))
+         (let [launch (AutoLaunch. {:name "BuddyList"})]
+           (.enable launch))))
 
   (.setApplicationMenu Menu (.buildFromTemplate Menu application-menu-template)))
