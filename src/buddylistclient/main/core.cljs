@@ -1,9 +1,10 @@
 (ns buddylistclient.main.core
   (:require
    [cljs.nodejs :as nodejs]
-   ["electron" :refer [app BrowserWindow Menu Tray ipcMain crashReporter Notification dialog]]
+   ["electron" :refer [app BrowserWindow Menu ipcMain crashReporter Notification dialog]]
    ["faye-websocket" :refer [Client]]
    ["path" :as path]
+   ["menubar" :refer [menubar]]
    ["sound-play" :as sound]
    [buddylistclient.main.forjure :refer [dissoc-in]]
    [buddylistclient.main.user :as user]
@@ -11,53 +12,7 @@
 
 (def *win* (atom {}))
 
-(def *user* (atom {}))
-
-(if (.-isPackaged app)
-  (set! (-> nodejs/process .-env .-NODE_ENV) "production")
-  (println (-> nodejs/process .-env .-NODE_ENV)))
-
-(def application-menu-template [{:label "File"
-                                 :submenu [{:label "Open buddy list"
-                                            :click #(println "open buddy list")}
-                                           {:label "Close Window"}]}
-                                {:label "Edit"
-                                 :submenu [{:label "Undo"
-                                            :accelerator "CmdOrCtrl+Z"
-                                            :selector "undo:"}
-                                           {:label "Redo"
-                                            :accelerator "Shift+CmdOrCtrl+Z"
-                                            :selector "redo:"}
-                                           {:label "Cut"
-                                            :accelerator "CmdOrCtrl+X"
-                                            :selector "cut:"}
-                                           {:label "Copy"
-                                            :accelerator "CmdOrCtrl+C"
-                                            :selector "copy:"}
-                                           {:label "Paste"
-                                            :accelerator "CmdOrCtrl+V"
-                                            :selector "paste:"}
-                                           {:label "Select All"
-                                            :accelerator "CmdOrCtrl+A"
-                                            :selector "selectAll:"}]}
-                                {:label "Buddies"
-                                 :submenu [{:label "Add Buddy"
-                                            :click #(println "Add buddy")}
-                                           {:label "Remove Buddy"
-                                            :click #(println "remove buddy")}]}])
-
-(if (= (.-platform nodejs/process) "darwin")
-  (def application-menu-template (into [{:label "BuddyList"
-                                         :submenu [{:label "Quit"
-                                                    :accelerator (if (= (.-platform nodejs/process) "darwin") "Command+Q" "Ctrl+Q")
-                                                    :click #(.quit app)}]}] application-menu-template)))
-
-(if (not= (-> nodejs/process .-env .-NODE_ENV) "production")
-  (def application-menu-template (conj application-menu-template {:label "Developer Tools"
-                                                                  :submenu [{:label "Toggle DevTools"
-                                                                             :click #(.toggleDevTools %2)
-                                                                             :accelerator (if (= (.-platform nodejs/process) "darwin") "Command+I" "Ctrl+I")}]})))
-(def application-menu-template (clj->js application-menu-template))
+(def *user* (atom nil))
 
 (defn on-buddy-message [e]
   (println "Message: " (.-data e))
@@ -78,7 +33,8 @@
         (.send (.-webContents window) "user" (->> @*user* clj->js (.stringify js/JSON)))))))
 
 (defn connect-buddylist []
-  (let [socket (Client. "wss://buddylist.app/buddies" nil (clj->js {:headers {:authorization (:auth-token @*user*) :request-user (:username @*user*)}}))
+  (let [socket (Client. "wss://buddylist.app/buddies" nil (clj->js {:headers {:authorization (:auth-token @*user*) :request-user (:username @*user*)}
+                                                                    :ping 10}))
         on-new-status-handler (fn [_ new-status]
                                 (println "received new-status" new-status)
                                 (let [package {:new-status new-status}
@@ -111,17 +67,6 @@
        (fn []
          (.send (-> @*win* :buddylist .-webContents) "user" (->> @*user* clj->js (.stringify js/JSON)))
          (connect-buddylist))))
-
-(.on ipcMain "login"
-     (fn [_ username password]
-       (-> (user/log-in username password)
-           (.then (fn [user]
-                    (reset! *user* user)
-                    (-> @*win* :authentication .close)
-                    (launch-buddylist)))
-           (.catch (fn [_]
-                     (if-let [window (:authentication @*win*)]
-                       (.send (.-webContents window) "login-error")))))))
 
 (.on ipcMain "signup"
      (fn [_ first-name last-name email phone username password]
@@ -241,7 +186,8 @@
   (.on (:authentication @*win*) "closed" #(swap! *win* dissoc :authentication)))
 
 (defn connect-chat []
-  (let [socket (Client. (str "wss://buddylist.app/chat") nil (clj->js {:headers {:authorization (:auth-token @*user*) :request-user (:username @*user*)}}))
+  (let [socket (Client. (str "wss://buddylist.app/chat") nil (clj->js {:headers {:authorization (:auth-token @*user*) :request-user (:username @*user*)}
+                                                                       :ping 10}))
         on-chat-sent (fn [_ to message]
                        (println "recieved chat from Client")
                        (let [package {:to to :message message}
@@ -264,9 +210,101 @@
       (close-all-windows window)
       (.close window))))
 
+(defn gen-unauth-menu []
+  (let [base [{:label "Edit"
+               :submenu [{:label "Undo"
+                          :accelerator "CmdOrCtrl+Z"
+                          :selector "undo:"}
+                         {:label "Redo"
+                          :accelerator "Shift+CmdOrCtrl+Z"
+                          :selector "redo:"}
+                         {:label "Cut"
+                          :accelerator "CmdOrCtrl+X"
+                          :selector "cut:"}
+                         {:label "Copy"
+                          :accelerator "CmdOrCtrl+C"
+                          :selector "copy:"}
+                         {:label "Paste"
+                          :accelerator "CmdOrCtrl+V"
+                          :selector "paste:"}
+                         {:label "Select All"
+                          :accelerator "CmdOrCtrl+A"
+                          :selector "selectAll:"}]}]]
+    (cond-> base
+      (= (.-platform nodejs/process) "darwin") (#(into [{:label "BuddyList"
+                                                         :submenu [{:label "Quit"
+                                                                    :accelerator (if (= (.-platform nodejs/process) "darwin") "Command+Q" "Ctrl+Q")
+                                                                    :click (fn [] (.quit app))}]}] %))
+      (not= (-> nodejs/process .-env .-NODE_ENV) "production") (conj {:label "Developer Tools"
+                                                                      :submenu [{:label "Toggle DevTools"
+                                                                                 :click #(.toggleDevTools %2)
+                                                                                 :accelerator (if (= (.-platform nodejs/process) "darwin") "Command+I" "Ctrl+I")}]})
+      :always clj->js)))
+
+(defn gen-authed-menu []
+  (let [base [{:label "File"
+               :submenu [{:label "Open buddy list"
+                          :click (fn []
+                                   (if-let [win (:buddylist @*win*)]
+                                     (.show win)
+                                     (launch-buddylist)))}]}
+              {:label "Edit"
+               :submenu [{:label "Undo"
+                          :accelerator "CmdOrCtrl+Z"
+                          :selector "undo:"}
+                         {:label "Redo"
+                          :accelerator "Shift+CmdOrCtrl+Z"
+                          :selector "redo:"}
+                         {:label "Cut"
+                          :accelerator "CmdOrCtrl+X"
+                          :selector "cut:"}
+                         {:label "Copy"
+                          :accelerator "CmdOrCtrl+C"
+                          :selector "copy:"}
+                         {:label "Paste"
+                          :accelerator "CmdOrCtrl+V"
+                          :selector "paste:"}
+                         {:label "Select All"
+                          :accelerator "CmdOrCtrl+A"
+                          :selector "selectAll:"}]}
+              {:label "Buddies"
+               :submenu [{:label "Add Buddy"
+                          :click (fn []
+                                   (if-let [win (:add-buddy @*win*)]
+                                     (.show win)
+                                     (open-addbuddy-win)))}]}]]
+    (cond-> base
+      (= (.-platform nodejs/process) "darwin") (#(into [{:label "BuddyList"
+                                                         :submenu [{:label "Quit"
+                                                                    :accelerator (if (= (.-platform nodejs/process) "darwin") "Command+Q" "Ctrl+Q")
+                                                                    :click (fn [] (.quit app))}]}] %))
+      (not= (-> nodejs/process .-env .-NODE_ENV) "production") (conj {:label "Developer Tools"
+                                                                      :submenu [{:label "Toggle DevTools"
+                                                                                 :click #(.toggleDevTools %2)
+                                                                                 :accelerator (if (= (.-platform nodejs/process) "darwin") "Command+I" "Ctrl+I")}]})
+      :always clj->js)))
+
+(defn generate-menu-template []
+  (if-let [_ @*user*]
+    (gen-authed-menu)
+    (gen-unauth-menu)))
+
+(.on ipcMain "login"
+     (fn [_ username password]
+       (-> (user/log-in username password)
+           (.then (fn [user]
+                    (reset! *user* user)
+                    (.setApplicationMenu Menu (.buildFromTemplate Menu (generate-menu-template)))
+                    (-> @*win* :authentication .close)
+                    (launch-buddylist)))
+           (.catch (fn [_]
+                     (if-let [window (:authentication @*win*)]
+                       (.send (.-webContents window) "login-error")))))))
+
 (defn logout []
   (close-all-windows @*win*)
-  (reset! *user* {})
+  (reset! *user* nil)
+  (.setApplicationMenu Menu (.buildFromTemplate Menu (generate-menu-template)))
   (user/clear-all)
   (launch-unauth-flow))
 
@@ -300,17 +338,14 @@
            (.then user (fn [u] (if u (do
                                        (println "User:" u)
                                        (reset! *user* u)
+                                       (.setApplicationMenu Menu (.buildFromTemplate Menu (generate-menu-template)))
                                        (-> @*win* :loading .close)
                                        (launch-buddylist)
                                        (user/cache-user @*user*)
                                        (connect-chat))
                                    (launch-unauth-flow))))
            (launch-unauth-flow))
-         (let [tray (Tray. (.resolve path (js* "__dirname") "../assets/list.png"))
-               context-menu (.buildFromTemplate Menu (clj->js [{:label "BuddyList"}]))]
-           (.setToolTip tray "BuddyList")
-           (.setContextMenu tray context-menu))
-         (let [launch (AutoLaunch. {:name "BuddyList"})]
+         (let [launch (AutoLaunch. (clj->js {:name "BuddyList"}))]
            (.enable launch))))
 
-  (.setApplicationMenu Menu (.buildFromTemplate Menu application-menu-template)))
+  (.setApplicationMenu Menu (.buildFromTemplate Menu (generate-menu-template))))
