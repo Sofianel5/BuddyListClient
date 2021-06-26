@@ -13,7 +13,7 @@
 
 (defonce state (atom nil))
 
-(def *user* (atom {}))
+(defonce *user (atom {}))
 
 (def EVENTCHANNEL (chan))
 
@@ -38,8 +38,8 @@
 
 (.on ipc-renderer "user" (fn [_ user-str]
                            (println "received user-str" user-str)
-                           (reset! *user* (js->clj (.parse js/JSON user-str) :keywordize-keys true))
-                           (println "parsed" @*user* (:username @*user*) (get @*user* "username"))))
+                           (reset! *user (js->clj (.parse js/JSON user-str) :keywordize-keys true))
+                           (println "parsed" @*user (:username @*user) (get @*user "username"))))
 
 (defn buddies-list [event-channel buddies]
   [:> Droppable {:droppable-id "droppable"
@@ -71,10 +71,10 @@
                                                      {:class "flex flex-row justify-between px-[20px] my-[10px] cursor-pointer" :on-click #(put! event-channel [:buddy-clicked buddy])}
                                                      drag-handler-props)
                                           [:div {:class "flex flex-row justify-start"}
-                                           [:img {:class "w-[50px] h-[50px] min-w-[50px] min-h-[50px] rounded-full overflow-hidden mr-[10px]" :src (if (nil? (:profile-pic buddy)) "../img/smiley.svg" (:profile-pic buddy))}]
+                                           [:img {:class (str (if (:active buddy) "border-2 border-[#0BEAAB] " " ") "object-cover w-[50px] h-[50px] min-w-[50px] min-h-[50px] rounded-full overflow-hidden mr-[10px]") :src (if (nil? (:profile-pic buddy)) "../img/smiley.svg" (:profile-pic buddy))}]
                                            [:div {:class "flex flex-col justify-evenly"}
-                                            [:h4 {:class "font-semibold"} (:username buddy)]
-                                            [:h6 {:class "font-normal text-xs"} (:status buddy)]]]
+                                            [:h4 {:class (if  (> (:new-messages buddy) 0) "font-bold" "font-normal")} (str (:username buddy) (if (> (:new-messages buddy) 0) (str " • " (:new-messages buddy)) ""))]
+                                            [:h6 {:class "text-[#9e9ea9] font-normal text-xs"} (:status buddy)]]]
                                           [:img {:class "w-[20px]" :src "../img/reorder.svg"}]])))]) buddies)
                     placeholder])))])
 
@@ -118,12 +118,12 @@
    [:div {:class "flex flex-row justify-start px-[20px]"}
     [:div {:class "cursor-pointer container w-[100px] h-[100px] m-w-[100px] m-h-[100px] rounded-full overflow-hidden mr-[20px]"
            :on-click #(.send ipc-renderer "new-profile-pic")}
-     [:img {:class "image w-[100px] h-[100px] min-w-[100px] min-h-[100px]" :src (if (nil? (:profile-pic @*user*)) "../img/smiley.svg" (:profile-pic @*user*))}]
+     [:img {:class "object-cover image w-[100px] h-[100px] min-w-[100px] min-h-[100px]" :src (if (nil? (:profile-pic @*user)) "../img/smiley.svg" (:profile-pic @*user))}]
      [:div {:class "overlay"} "Change"]]
     [:div {:class "flex flex-col justify-evenly max-w-[140px]"}
-     [:h3 {:class "font-bold"} (str (:first-name @*user*) " " (:last-name @*user*))]
-     [:h5 {:class "font-semibold"} (str "@" (:username @*user*))]
-     [:h6 {:class "font-normal text-xs"} (:status @*user*)]]]
+     [:h3 {:class "font-bold"} (str (:first-name @*user) " " (:last-name @*user))]
+     [:h5 {:class "font-semibold"} (str "@" (:username @*user))]
+     [:h6 {:class "font-normal text-xs"} (:status @*user)]]]
    [status-update EVENTCHANNEL]
    [:h3 {:class "font-bold ml-[20px]"} "Buddies"]
    (if @state

@@ -1,7 +1,10 @@
 {
     "name": "buddylistclient",
-    "version": "1.0.0",
+    "version": "0.0.5",
     "main": "resources/main.js",
+    "mac": {
+        "icon": "resources/public/img/buddylist.icns"
+    },
     "scripts": {
         "dev:css": "NODE_ENV=development postcss src/buddylistclient/renderer/styles/css --base src/buddylistclient/renderer/styles/css --dir resources/public/css -w",
         "release:css": "NODE_ENV=production postcss src/buddylistclient/renderer/styles/css --base src/buddylistclient/renderer/styles/css --dir resources/public/css",

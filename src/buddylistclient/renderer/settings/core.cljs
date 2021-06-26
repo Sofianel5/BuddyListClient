@@ -21,9 +21,9 @@
 
 (def user (js->clj (.parse js/JSON (js/decodeURIComponent (:user data))) :keywordize-keys true))
 
-(def ipc-renderer (.-ipcRenderer Electron))
+(def *client-settings (atom (js->clj (.parse js/JSON (js/decodeURIComponent (:settings data))) :keywordize-keys true)))
 
-(defonce state (atom nil))
+(def ipc-renderer (.-ipcRenderer Electron))
 
 (def EVENTCHANNEL (chan))
 
@@ -45,7 +45,7 @@
     [:div {:class "flex flex-col justify-evenly"}
      [:h3 {:class "font-bold"} (str (:first-name user) " " (:last-name user))]
      [:h5 {:class "font-semibold"} (str "@" (:username user))]
-     [:h6 {:class "font-normal text-xs"} (:status user)]]]
+     [:h6 {:class "font-normal text-xs"} (str "Status: " (:status user))]]]
    [:div {:class "mt-[20px] pb-[10px] mb-[10px] mx-[10px] bg-[#43434C] rounded-lg"}
     [:div {:class "flex flex-row justify-between px-[15px] pt-[10px]"}
      [:div {:class "flex flex-col justify-center"}
@@ -73,11 +73,17 @@
       [:p {:class "text-sm"} (:phone user)]]
      [:span]]]])
 
+(defn save-settings []
+  (.send ipc-renderer "new-settings" (->> @*client-settings clj->js (.stringify js/JSON))))
 
 (defn root-component []
   [:div {:class "relative h-screen w-screen font-sans bg-[#43434C] select-none text-[#FFFAFF] overflow-x-hidden"}
    [:h3 {:class "ml-[20px] mt-[25px] mb-[10px] font-bold text-lg"} "My Account"]
    [account-box]
+   [:h3 {:class "ml-[20px] mt-[25px] mb-[10px] font-bold text-lg"} "Client Settings"]
+   [:div {:class "flex flex-row justify-start"}
+    [:h6 {:class "mx-[20px] font-semibold text-sm"} "Sounds"]
+    [:input {:class "focus:outline-none focus:border-none focus:ring-0" :type "checkbox" :checked (:sounds @*client-settings) :on-click #(do (swap! *client-settings assoc :sounds (not (:sounds @*client-settings))) (save-settings))}]]
    [:h3 {:class "ml-[20px] mt-[25px] mb-[10px] font-bold text-lg"} "Switch Accounts"]
    [:button {:class "ml-[20px] mb-[25px] px-[10px] py-[5px] bg-[#30BCED] rounded focus:outline-none"
              :on-click #(.send ipc-renderer "logout")}

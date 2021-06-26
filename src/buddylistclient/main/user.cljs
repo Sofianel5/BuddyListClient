@@ -1,5 +1,6 @@
 (ns buddylistclient.main.user
   (:require [cljs.nodejs :as nodejs]
+            [buddylistclient.main.config :as config]
             ["axios" :as axios]
             ["path" :as path]
             ["fs" :as fs]
@@ -27,8 +28,11 @@
   (.removeItem store user-key)
   (.removeItem store buddies-key))
 
-(defn chat-key [with-user]
-  (str "chat-" with-user))
+(def chat-key "chats")
+
+(def settings-key "settings")
+
+(def default-settings {:sounds true})
 
 (defn get-cached-user []
   (if-let [encoded-user (.getItem store user-key)]
@@ -45,15 +49,16 @@
     (cache-string encoded-stuff key)
     stuff))
 
+(defn get-cached-clj-map [key]
+  (if-let [encoded-map (.getItem store key)]
+    (js->clj (.parse js/JSON encoded-map) :keywordize-keys true)))
+
 (defn cache-user [user-map]
   (cache-clj-map user-map user-key))
 
-(defn cache-buddies-str [buddies-str]
-  (cache-string buddies-str buddies-key))
-
 (defn log-in [username password]
   (let [params {:username username :password password}
-        options (clj->js {:method "POST" :url "https://buddylist.app/login" :params params})
+        options (clj->js {:method "POST" :url config/login-url :params params})
         request (axios options)]
     (.then request #(-> % (js->clj :keywordize-keys true) :data cache-user))))
 
@@ -61,13 +66,21 @@
 
 (defn sign-up [first-name last-name email phone username password]
   (let [params {:username username :cleartext-password password :phone phone :first-name first-name :last-name last-name :email email}
-        options (clj->js {:method "POST" :url "https://buddylist.app/signup" :params params})
+        options (clj->js {:method "POST" :url config/signup-url :params params})
         request (axios options)]
     (.then request #(-> % (js->clj :keywordize-keys true) :data cache-user))))
 
+  (defn get-settings []
+    (if-let [settings (get-cached-clj-map settings-key)]
+      settings
+      default-settings))
+
+(defn save-settings [m]
+  (cache-clj-map m settings-key))
+
 (defn update-user [username auth-token]
   (let [headers {:authorization auth-token :request-user username}
-        options (clj->js {:method "POST" :url "https://buddylist.app/user" :headers headers})
+        options (clj->js {:method "POST" :url config/user-url :headers headers})
         request (axios options)]
     (-> request
         (.then #(-> % (js->clj :keywordize-keys true) :data))
@@ -81,7 +94,7 @@
 (defn add-buddy [username auth-token new-buddy]
   (let [headers {:authorization auth-token :request-user username}
         params {:new-buddy new-buddy}
-        options (clj->js {:method "POST" :url "https://buddylist.app/add-buddy" :headers headers :params params})
+        options (clj->js {:method "POST" :url config/add-buddy-url :headers headers :params params})
         request (axios options)]
     (-> request
         (.then #(-> % (js->clj :keywordize-keys true) :data))
@@ -90,7 +103,7 @@
 (defn get-chat-history [username auth-token buddy start offset]
   (let [headers {:authorization auth-token :request-user username}
         params {:start start :offset offset :buddy buddy}
-        options (clj->js {:method "GET" :url "https://buddylist.app/chat-history" :headers headers :params params})
+        options (clj->js {:method "GET" :url config/chat-history-url :headers headers :params params})
         request (axios options)]
     (-> request
         (.then #(.-data %))
@@ -103,7 +116,7 @@
                                                           (aget 0)
                                                           .toString)))
         headers (merge {:authorization auth-token :request-user username} (-> form .getHeaders js->clj))
-        options (clj->js {:method "post" :url "https://buddylist.app/set-pfp" :data form :headers headers})
+        options (clj->js {:method "post" :url config/pfp-url :data form :headers headers})
         request (axios options)]
     (-> request
         (.then #(-> % (js->clj :keywordize-keys true) :data))
@@ -113,8 +126,15 @@
   (println new-buddies-order)
   (let [headers {:authorization auth-token :request-user username "Content-Type" "application/json"}
         params {:new-buddies-order new-buddies-order}
-        options (clj->js {:method "POST" :url "https://buddylist.app/rearrange-buddies" :headers headers :data params})
+        options (clj->js {:method "POST" :url config/rearrange-buddies-url :headers headers :data params})
         request (axios options)]
     (-> request
         (.then #(.-data %))
         (.catch #(println (-> % .-response .-data))))))
+
+(defn cache-unread-messages-map [m]
+  (cache-clj-map m chat-key))
+
+(defn get-unread-messages-map []
+  (if-let [encoded-map (.getItem store chat-key)]
+    (js->clj (.parse js/JSON encoded-map))))

@@ -20,9 +20,9 @@
 
 (def data (parse-url (-> js/global .-location .-search)))
 
-(def user (js->clj (.parse js/JSON (js/decodeURIComponent (:user data))) :keywordize-keys true))
+(def *user (atom (js->clj (.parse js/JSON (js/decodeURIComponent (:user data))) :keywordize-keys true)))
 
-(def with-user (js->clj (.parse js/JSON (js/decodeURIComponent (:with-user data))) :keywordize-keys true))
+(defonce *with-user (atom (js->clj (.parse js/JSON (js/decodeURIComponent (:with-user data))) :keywordize-keys true)))
 
 (def ipc-renderer (.-ipcRenderer Electron))
 
@@ -32,7 +32,7 @@
 
 (def EVENTS
   {:message-sent (fn [message]
-                   (.send ipc-renderer "chat:sent" (:username with-user) message))})
+                   (.send ipc-renderer "chat:sent" (:username @*with-user) message))})
 
 (go
   (while true
@@ -44,9 +44,7 @@
        (println message)
        (let [parsed (.parse js/JSON message)
              message (js->clj parsed :keywordize-keys true)]
-         (swap! state conj message)
-         (if (= (-> message :from) (:username user))
-           (.play (js/Audio. "../sounds/imsend.wav"))))
+         (swap! state conj message))
        (if-let [element (js/document.getElementById "message-list")]
          (do
            (set! (.-scrollTop element) (.-scrollHeight element))
@@ -62,6 +60,11 @@
            (set! (.-scrollTop element) (.-scrollHeight element))
            (println "done!"))
          (println "not rendered message-list yet"))))
+
+(.on ipc-renderer "chat:update-buddy"
+     (fn [_ new-buddy-str]
+       (println "new buddy" new-buddy-str)
+       (reset! *with-user (js->clj (.parse js/JSON new-buddy-str) :keywordize-keys true))))
 
 (defn conglomerate-messages [messages]
   (partition-by :from messages))
@@ -80,9 +83,9 @@
              (fn [message-group]
                [:li {:class "flex flex-row justify-start my-[5px] ml-[5px]"
                      :key (str (first message-group) "-group")}
-                (let [my-message? (= (:username user) (-> message-group first :from))
-                      img-url (if my-message? (:profile-pic user) (:profile-pic with-user))]
-                  [:img {:class "w-[50px] h-[50px] m-w-[50px] m-h-[50px] rounded-full overflow-hidden mr-[10px]" :src (if (nil? img-url) "../img/smiley.svg" img-url)}])
+                (let [my-message? (= (:username @*user) (-> message-group first :from))
+                      img-url (if my-message? (:profile-pic @*user) (:profile-pic @*with-user))]
+                  [:img {:class "object-cover w-[50px] h-[50px] min-w-[50px] min-h-[50px] rounded-full overflow-hidden mr-[10px]" :src (if (nil? img-url) "../img/smiley.svg" img-url)}])
                 [:div
                  [:h5 {:class "font-semibold"}
                   (-> message-group first :from)
@@ -100,24 +103,24 @@
   (.preventDefault event)
   (let [message (-> js/document (.getElementById "chat-input") .-value)]
     (js/console.log message)
-    (.send ipc-renderer "chat:sent" (:username with-user) message)
+    (.send ipc-renderer "chat:sent" (:username @*with-user) message)
     (set! (-> js/document (.getElementById "chat-input") .-value) "")))
 
 (defn chat-input []
   [:form {:class "flex flex-row shadow-2xl overflow-hidden absolute inset-x-0 bottom-0 bg-[#303036] h-[50px] mx-[10px] mb-[10px] rounded-full" :on-submit #(submit-chat %) :style {"-webkit-app-region" "no-drag"}}
-   [:input {:class "text-sm bg-[#43434C] border-0" :style {:flex "4"} :id "chat-input" :type "text" :placeholder (str "Message @" (:username with-user))}]
+   [:input {:class "text-sm bg-[#43434C] border-0" :style {:flex "4"} :id "chat-input" :type "text" :placeholder (str "Message @" (:username @*with-user)) :autoFocus true}]
    [:input {:class "bg-[#30BCED] text-[#FFFAFF] border-0 cursor-pointer" :style {:flex "1"} :type "submit" :value "Send"}]])
 
-(defn chat-header [with-user]
+(defn chat-header [buddy]
   [:div {:class "flex flex-row justify-start px-[75px] py-[5px] bg-[#303036] cursor-pointer"}
-   [:img {:class "w-[50px] h-[50px] m-w-[50px] m-h-[50px] rounded-full overflow-hidden mr-[10px]" :src (if (nil? (:profile-pic with-user)) "../img/smiley.svg" (:profile-pic with-user))}]
+   [:img {:class "object-cover w-[50px] h-[50px] m-w-[50px] m-h-[50px] rounded-full overflow-hidden mr-[10px]" :src (if (nil? (:profile-pic buddy)) "../img/smiley.svg" (:profile-pic buddy))}]
    [:div {:class "flex flex-col justify-evenly"}
-    [:h4 {:class "font-semibold"} (:username with-user)]
-    [:h6 {:class "font-normal text-xs"} (:status with-user)]]])
+    [:h4 {:class "font-semibold"} (:username buddy)]
+    [:h6 {:class "font-normal text-xs"} (:status buddy)]]])
 
 (defn root-component []
   [:div {:class "relative h-screen w-screen font-sans bg-[#3A3A41] select-none text-[#FFFAFF] overflow-x-hidden"}
-   [chat-header with-user]
+   [chat-header @*with-user]
    [message-list (conglomerate-messages @state)]
    [chat-input]])
 
