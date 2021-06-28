@@ -1,7 +1,7 @@
 (ns buddylistclient.main.core
   (:require
    [cljs.nodejs :as nodejs]
-   ["electron" :refer [app BrowserWindow Menu Tray ipcMain crashReporter Notification dialog nativeTheme]]
+   ["electron" :refer [app BrowserWindow Menu MenuItem Tray ipcMain crashReporter Notification dialog nativeTheme]]
    ["faye-websocket" :refer [Client]]
    ["path" :as path]
    ["sound-play" :as sound]
@@ -33,9 +33,18 @@
 
 (declare launch-buddylist)
 
+(defn enable-spellcheck [window]
+  (.on (.-webContents window) "context-menu"
+       (fn [_ params]
+         (let [menu (Menu.)]
+           (doseq [suggestion (.-dictionarySuggestions params)]
+             (.append menu (MenuItem. (clj->js {:label suggestion :click #(-> window .-webContents (.replaceMisspelling suggestion))}))))
+           (.popup menu)))))
+
 (defn launch-chat [with-user data]
   (swap! *win assoc-in [:chats with-user] (BrowserWindow. (clj->js {:width 500 :minWidth 350 :height 400 :minHeight 300 :titleBarStyle "hidden" :webPreferences {:nodeIntegration true :contextIsolation false}})))
   (.loadFile (-> @*win :chats (get with-user)) (.resolve path js/__dirname "../resources/public/html/chat.html") (clj->js {:query {:with-user data :user (->> @*user clj->js (.stringify js/JSON))}}))
+  (enable-spellcheck (-> @*win :chats (get with-user)))
   (.on (-> @*win :chats (get with-user) .-webContents) "did-finish-load"
        (fn []
          (println "chat did-finish-load " with-user)
@@ -167,6 +176,7 @@
   (println "user:" @*user)
   (println @*new-messages)
   (swap! *win assoc :buddylist (BrowserWindow. (clj->js {:width 300 :minWidth 300 :height 700 :titleBarStyle "hidden" :webPreferences {:nodeIntegration true :contextIsolation false}})))
+  (enable-spellcheck (:buddylist @*win))
   (.loadURL (:buddylist @*win) (str "file://" (.resolve path js/__dirname "../resources/public/html/buddylist.html")))
   (.on (-> @*win :buddylist .-webContents) "did-finish-load"
        (fn []

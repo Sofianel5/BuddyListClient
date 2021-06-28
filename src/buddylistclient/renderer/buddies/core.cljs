@@ -8,7 +8,6 @@
 
 (def Electron (nodejs/require "electron"))
 
-
 (def ipc-renderer (.-ipcRenderer Electron))
 
 (defonce state (atom nil))
