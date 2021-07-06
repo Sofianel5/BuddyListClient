@@ -184,19 +184,6 @@
          (connect-buddylist)
          (update-dock))))
 
-(.on ipcMain "signup"
-     (fn [_ first-name last-name email phone username password]
-       (-> (user/sign-up first-name last-name email phone username password)
-           (.then (fn [user]
-                    (reset! *user user)
-                    (-> @*win :authentication .close)
-                    (launch-buddylist)))
-           (.catch (fn [errors]
-                     (if-let [window (:authentication @*win)]
-                       (.send (.-webContents window) "signup-error" (-> errors
-                                                                        .-response
-                                                                        .-data
-                                                                        (#(.stringify js/JSON %))))))))))
 
 (defn notify-new-message [with-user message]
   (let [notification-params (clj->js {:title (str "New message from " with-user)
@@ -313,9 +300,9 @@
 (defn connect-chat []
   (let [socket (Client. config/chat-ws-url nil (clj->js {:headers {:authorization (:auth-token @*user) :request-user (:username @*user)}
                                                                        :ping 10}))
-        on-chat-sent (fn [_ to message]
+        on-chat-sent (fn [_ to message message-uuid]
                        (println "recieved chat from Client")
-                       (let [package {:to to :message message}
+                       (let [package {:to to :message message :uuid message-uuid}
                              encoded-message (->> package
                                                   clj->js
                                                   (.stringify js/JSON))]
@@ -424,10 +411,29 @@
                     (reset! *user user)
                     (.setApplicationMenu Menu (.buildFromTemplate Menu (generate-menu-template)))
                     (-> @*win :authentication .close)
-                    (launch-buddylist)))
+                    (launch-buddylist)
+                    (user/cache-user @*user)
+                    (connect-chat)))
            (.catch (fn [_]
                      (if-let [window (:authentication @*win)]
                        (.send (.-webContents window) "login-error")))))))
+
+(.on ipcMain "signup"
+     (fn [_ first-name last-name email phone username password]
+       (-> (user/sign-up first-name last-name email phone username password)
+           (.then (fn [user]
+                    (reset! *user user)
+                    (-> @*win :authentication .close)
+                    (.setApplicationMenu Menu (.buildFromTemplate Menu (generate-menu-template)))
+                    (launch-buddylist)
+                    (user/cache-user @*user)
+                    (connect-chat)))
+           (.catch (fn [errors]
+                     (if-let [window (:authentication @*win)]
+                       (.send (.-webContents window) "signup-error" (-> errors
+                                                                        .-response
+                                                                        .-data
+                                                                        (#(.stringify js/JSON %))))))))))
 
 (defn logout []
   (close-all-windows @*win)
@@ -448,9 +454,14 @@
 
   ;; window all closed listener
   (.on app "window-all-closed"
-       (fn [] (if (not= (.-platform nodejs/process) "darwin")
+       (fn [] (if (not= (.-platform nodejs/process) "darwin") 
                 ; Stop doing this in future
                 (.quit app))))
+  
+  (.on app "activate"
+       (fn []
+         (when (and (= (-> BrowserWindow .getAllWindows .-length) 0) (-> @*user nil? not))
+           (launch-buddylist))))
 
   ;; ready listener
   (.on app "ready"
@@ -472,6 +483,7 @@
                                    (launch-unauth-flow))))
            (launch-unauth-flow))
          (let [launch (AutoLaunch. (clj->js {:name "BuddyList"}))]
-           (.enable launch))))
+           (.enable launch))
+         (println "data folder" (.join path (-> nodejs/process .-env .-HOME) "Library" "Application Support" "BuddyList"))))
 
   (.setApplicationMenu Menu (.buildFromTemplate Menu (generate-menu-template))))

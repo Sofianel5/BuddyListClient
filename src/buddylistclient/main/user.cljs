@@ -7,11 +7,6 @@
             ["form-data" :as FormData]
             ["node-localstorage" :refer [LocalStorage]]))
 
-(defn none-nil
-  "returns true if none of the items provided are nill"
-  [& items]
-  (not (some nil? items)))
-
 (defn get-prod-folder []
   (case (.-platform nodejs/process)
     "darwin" (.join path (-> nodejs/process .-env .-HOME) "Library" "Application Support" "BuddyList")
@@ -24,13 +19,15 @@
 
 (def buddies-key "buddies")
 
-(defn clear-all []
-  (.removeItem store user-key)
-  (.removeItem store buddies-key))
-
 (def chat-key "chats")
 
 (def settings-key "settings")
+
+(defn clear-all []
+  (.removeItem store user-key)
+  (.removeItem store buddies-key)
+  (.removeItem store chat-key)
+  (.removeItem store settings-key))
 
 (def default-settings {:sounds true})
 
